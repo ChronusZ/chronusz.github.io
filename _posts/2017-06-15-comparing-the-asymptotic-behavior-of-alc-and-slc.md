@@ -4,8 +4,6 @@ title: "Comparing the Asymptotic Behavior of ALC and SLC"
 date: 2017-06-15
 ---
 
-# Comparing Asynchronous and Synchronous Linear Consensus
-
 ## Introduction
 
 Brad considered in his note a linear approximation of consensus that operated by iteratively updating the value of each node by averaging the values of its neighbors from the previous step. We call this version of consensus **synchronous linear consensus (SLC)**, since the nodes are updating synchronously and the update function is a linear operator on the state vectors.
@@ -18,7 +16,7 @@ In this note we will compare the asymptotic behavior of SLC to that of ALC and s
 
 ## Notation
 
-Let $$G=(V,E)$$ be a directed graph with adjacency matrix $$A$$. For $$v\in V$$, let $$k^v$$ be the set of neighbors of $$v$$, i.e., $$N^v=\{u\in V|(u\to v)\in E\}$$. For simplicity we assume that each node in $$V$$ is indexed by a natural number, and we refer to the node and its index interchangeably. We assume that every node is its own neighbor. Let $$D$$ be the diagonal in-degree matrix. Define the averaging operator $$T$$ by $$T=D^{-1}A$$.
+Let $G=(V,E)$ be a directed graph with adjacency matrix $$A$$. For $$v\in V$$, let $$k^v$$ be the set of neighbors of $$v$$, i.e., $$N^v=\{u\in V|(u\to v)\in E\}$$. For simplicity we assume that each node in $$V$$ is indexed by a natural number, and we refer to the node and its index interchangeably. We assume that every node is its own neighbor. Let $$D$$ be the diagonal in-degree matrix. Define the averaging operator $$T$$ by $$T=D^{-1}A$$.
 
 Throughout the paper we will use a matrix norm defined as follows: Let $$M$$ be an $$m\times n$$ matrix. Then $$|M|$$ denotes the $$\ell_\infty$$ entry-wise norm of $M$, i.e., $$|M|=\max\{|M^{ij}|:1\leqslant i \leqslant m,1\leqslant j\leqslant n\}$$. This norm behaves very similarly to the regular absolute value on real numbers, but care should be taken since it doesn't respect products, i.e., $|M||N|\neq|MN|$ in general.
 
