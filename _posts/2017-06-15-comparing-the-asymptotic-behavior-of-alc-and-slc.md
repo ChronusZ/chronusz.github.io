@@ -9,7 +9,7 @@ use_math: true
 
 Brad considered in his note a linear approximation of consensus that operated by iteratively updating the value of each node by averaging the values of its neighbors from the previous step. We call this version of consensus **synchronous linear consensus (SLC)**, since the nodes are updating synchronously and the update function is a linear operator on the state vectors.
 
-We contrast SLC with what we call **asynchronous linear consensus (ALC)**; instead of all nodes simultaneously updating their values by averaging with their neighbors, in the ALC model at each step a node is chosen at random according to a probability distribution $$P$$ on $$V$$, and the chosen node updates its value by averaging with its neighbors&#39; values.
+We contrast SLC with what we call **asynchronous linear consensus (ALC)**; instead of all nodes simultaneously updating their values by averaging with their neighbors, in the ALC model at each step a node is chosen at random according to a probability distribution $P$ on $V$, and the chosen node updates its value by averaging with its neighbors&#39; values.
 
 It turns out that in the ALC model, despite the lack of determinism, the update function is in fact a linear operator on the *expectation values* of the state vectors, justifying our use of the word linear in its name.
 
