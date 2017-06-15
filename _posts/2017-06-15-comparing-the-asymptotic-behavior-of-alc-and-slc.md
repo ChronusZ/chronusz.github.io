@@ -6,3 +6,6 @@ use_math: true
 ---
 
 <script type="math/tex">3+2=5</script>
+$$3+2=5$$
+
+Try $3+2=5$...
