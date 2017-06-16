@@ -59,7 +59,7 @@ We can compute the expected state vectors recursively as follows. For a given no
 x_n^v&=E[X_n^v]\\\
 &=E\left[(1-P(v))X_{n-1}^v+P(v)\left(\frac{1}{\vert N^v\vert}\sum_{u\in N^v} X_{n-1}^u\right)\right]\\\
 &=(1-P(v))E[X_{n-1}^v]+P(v)\left(\frac{1}{\vert N^v\vert}\sum_{u\in N^v} E[X_{n-1}^u]\right)\\\
-&=(1-P(v))x_{n-1}^v+P(v)\left(\frac{1}{\vert N^v\vert}\sum_{u\in N^v} x_{n-1}^u\right)\phantom{----} (eq.1)
+&=(1-P(v))x_{n-1}^v+P(v)\left(\frac{1}{\vert N^v\vert}\sum_{u\in N^v} x_{n-1}^u\right)
 \end{aligned}
 
 This recursion formula defines a linear transition operator $$\tilde{T}$$ on the expected state vectors. This explains our usage of the word linear in the term ALC: even though ALC can behave in each instance nonlinearly, the expected evolution is a linear difference equation.
@@ -84,7 +84,7 @@ Thus the question is reduced to showing that as $$n$$ increases, the contributio
 By the binomial theorem, we have
 \begin{aligned}
 \tilde{T}^n&=((1-P)+PT)^n\\\
-&=\sum_{i=1}^{n}\binom{n}{i}(1-P)^{n-i}(PT)^i
+&=\sum_{i=1}^{n}\binom{n}{i}(1-P)^{n-i}(PT)^i\phantom{----} (eq.1)
 \end{aligned}
 
 This is the indexed sum we referred to in the previous section. Since this is defined in terms of powers of $$T$$, it gives a convenient setting for comparing $$\tilde{T}^{\star}$$ and $$T^{\star}$$. Note that $$\binom{n}{i}(1-P)^{n-i}P^i$$ is coordinate-wise just a binomial distribution.
@@ -142,7 +142,7 @@ Since $$\varepsilon$$ was chosen arbitrarily, we have that the absolute differen
 
 # Conclusion
 
-ALC is still only an abstract approximation of consensus, but it seems a priori to more closely mimic the behavior of Ripple consensus than SLC does. However, fo making far-reaching mathematical statements, SLC is much more useful in practice, being a deterministic linear difference equation. Having showed that ALC converges on average to the same distribution as SLC, this gives reasonable evidence for the validity of arguments based on SLC.
+ALC is still only an abstract approximation of consensus, but it seems a priori to more closely mimic the behavior of Ripple consensus than SLC does. However, for making far-reaching mathematical statements, SLC is much more useful in practice, being a deterministic linear difference equation. Having showed that ALC converges on average to the same distribution as SLC, this gives some evidence for the validity of arguments based on SLC.
 
 A question that we haven&#39;t touched upon at all which still deserves exploration is a comparison of the rate of convergence of ALC compared to SLC. Also, I ran a few simulations beforehand comparing ALC to SLC, and found that the standard deviation of the stable-state of ALC can be quite high; in the undirected triangle graph with initial state vector $$(1,1,0)$$ for example, we got a coordinate-wise standard deviation of around $$0.24$$. A few tests on higher-order complete graphs seemed to signify that the standard deviation decreases with the number of nodes (or perhaps degree) and with how many of the initial states agree. However, even in a complete graph with $$10$$ nodes and an initial state vector of $$(1,1,1,1,1,1,1,1,1,0)$$ the standard deviation was above $$0.09$$, which seems high to me. I don't know how important this actually is, but it may be worth looking into further.
 
