@@ -124,11 +124,12 @@ Given any $$\varepsilon>0$$, we can now show that $$\vert T^{\star}-\tilde{T}^{\
 \vert\tilde{T}^{\star}-T^{\star}\vert&=\lim\limits_{n\to\infty}\left\vert\left(\sum_{i=N+1}^{n}\binom{n}{i}(1-P)^{n-i}P^iT^i\right)-T^{\star}\right\vert\\\
 &\mathop{=}\limits^{(eq.2)}\lim\limits_{n\to\infty}\left\vert\sum_{i=N+1}^{n}\binom{n}{i}(1-P)^{n-i}P^i\left(T^i-T^{\star}\right)\right\vert\\\
 &\leqslant\lim\limits_{n\to\infty}\sum_{i=N+1}^{n}\binom{n}{i}(1-P)^{n-i}P^i\left\vert T^i-T^{\star}\right\vert\\\
-&<\varepsilon\lim\limits_{n\to\infty}\sum_{i=N+1}^{n}\binom{n}{i}(1-P)^{n-i}P^i\\\
-&\leqslant\varepsilon.
+&<\lim\limits_{n\to\infty}\sum_{i=N+1}^{n}\binom{n}{i}(1-P)^{n-i}P^i\cdot \varepsilon\\\
+&=\varepsilon\lim\limits_{n\to\infty}\sum_{i=N+1}^{n}\binom{n}{i}(1-P)^{n-i}P^i\\\
+&\mathop{\leqslant}\limits^{(eq.2)}\varepsilon.
 \end{aligned}
 
-The last inequality uses the fact that the binomial distribution $$\binom{n}{i}(1-P)^{n-i}P^i$$ is a probability distribution and hence by definition $$\sum_{i=1}^{n}\binom{n}{i}(1-P)^{n-i}P^i=1$$ for all $$n$$. Since $$\varepsilon$$ was chosen arbitrarily, we have that the absolute difference between $$\tilde{T}^{\star}$$ and $$T^{\star}$$ is smaller than every positive real number, so they must in fact be the same matrix. In other words, the asymptotic behavior of SLC is identical to the expected asymptotic behavior of ALC.
+Since $$\varepsilon$$ was chosen arbitrarily, we have that the absolute difference between $$\tilde{T}^{\star}$$ and $$T^{\star}$$ is smaller than every positive real number, so they must in fact be the same matrix. In other words, the asymptotic behavior of SLC is identical to the expected asymptotic behavior of ALC.
 
 # Conclusion
 
