@@ -11,7 +11,7 @@ use_math: true
 
 Brad considered in his note a linear approximation of consensus that operated by iteratively updating the value of each node by averaging the values of its neighbors from the previous step. We call this version of consensus **synchronous linear consensus (SLC)**, since the nodes are updating synchronously and the update function is a linear operator on the state vectors.
 
-We contrast SLC with what we call **asynchronous linear consensus (ALC)**; instead of all nodes simultaneously updating their values by averaging with their neighbors, in the ALC model at each step a node is chosen at random according to a probability distribution $P$ on $V$, and the chosen node updates its value by averaging with its neighbors&#39; values.
+We contrast SLC with what we call **asynchronous linear consensus (ALC)**; instead of all nodes simultaneously updating their values by averaging with their neighbors, in the ALC model at each step a node is chosen at random according to a probability distribution $$P$$ on $$V$$, and the chosen node updates its value by averaging with its neighbors&#39; values.
 
 It turns out that in the ALC model, despite the lack of determinism, the update function is in fact a linear operator on the *expectation values* of the state vectors, justifying our use of the word linear in its name.
 
@@ -19,9 +19,9 @@ In this note we will compare the asymptotic behavior of SLC to that of ALC and s
 
 ## Notation
 
-Let $G=(V,E)$ be a directed graph with adjacency matrix $A$. For $v\in V$, let $k^v$ be the set of neighbors of $v$, i.e., $N^v=\{u\in V\vert(u\to v)\in E\}$. For simplicity we assume that each node in $V$ is indexed by a natural number, and we refer to the node and its index interchangeably. We assume that every node is its own neighbor. Let $D$ be the diagonal in-degree matrix. Define the averaging operator $T$ by $T=D^{-1}A$.
+Let $$G=(V,E)$$ be a directed graph with adjacency matrix $$A$$. For $$v\in V$$, let $$k^v$$ be the set of neighbors of $$v$$, i.e., $$N^v=\{u\in V\vert(u\to v)\in E\}$$. For simplicity we assume that each node in $$V$$ is indexed by a natural number, and we refer to the node and its index interchangeably. We assume that every node is its own neighbor. Let $$D$$ be the diagonal in-degree matrix. Define the averaging operator $$T$$ by $$T=D^{-1}A$$.
 
-Throughout the paper we will use a matrix norm defined as follows: Let $M$ be an $m\times n$ matrix. Then $\vert M\vert$ denotes the $\ell_\infty$ entry-wise norm of $M$, i.e., $\vert M\vert=\max\{\vert M^{ij}\vert:1\leqslant i \leqslant m,1\leqslant j\leqslant n\}$. This norm behaves very similarly to the regular absolute value on real numbers, but care should be taken since it doesn't respect products, i.e., $\vertM\vert\cdot\vert N\vert\neq\vert M\cdot N\vert$ in general.
+Throughout the paper we will use a matrix norm defined as follows: Let $$M$$ be an $$m\times n$$ matrix. Then $$\vert M\vert$$ denotes the $$\ell_\infty$$ entry-wise norm of $$M$$, i.e., $$\vert M\vert=\max\{\vert M^{ij}\vert:1\leqslant i \leqslant m,1\leqslant j\leqslant n\}$$. This norm behaves very similarly to the regular absolute value on real numbers, but care should be taken since it doesn't respect products, i.e., $$\vertM\vert\cdot\vert N\vert\neq\vert M\cdot N\vert$$ in general.
 
 ## Synchronous Linear Consensus
 
@@ -36,11 +36,11 @@ We now make a quick interlude to discuss the technical convergence of SLC. A gra
 (Intuitively, the aperiodicity condition prevents a configuration where everything just cycles around in a predictable way forever, like in a directed cycle graph.)
 
 The familiar definition of convergence of an infinite sequence says that $$T^n$$ **converges** to $$T^{\star}$$ iff for all $\varepsilon>0$ there exists some $$N\in\mathbb{N}$$ such that for all $$n>N$$, $$\vert T^n-T^{\star}\vert$$ (here we're using the matrix norm defined in the notation section). There is another unfortunately convoluted definition that we will find useful near the end of this note: we say that $$T^n$$ **binomially converges** to $$T^{\star}$$ iff for all $\varepsilon>0$ there exists some $$N\in\mathbb{N}$$ such that for any $$0<p<1$$, $$\lim\limits_{n\to\infty}\sum_{i=N+1}^n\binom{n}{i}(1-p)^{n-i}p^i\vert T^i-T^{\star}\vert<\varepsilon$$. If $$T^n$$ converges to $$T^{\star}$$, then using the $$N$$ given by definition of convergence, we have
-$$$\begin{aligned}
+\begin{aligned}
 \lim\limits_{n\to\infty}\sum_{i=N+1}^n\binom{n}{i}(1-p)^{n-i}p^i\vert T^i-T^{\star}\vert&<\lim\limits_{n\to\infty}\sum_{i=N+1}^n\binom{n}{i}(1-p)^{n-i}p^i\varepsilon\\
 &=\varepsilon\lim\limits_{n\to\infty}\sum_{i=N+1}^n\binom{n}{i}(1-p)^{n-i}p^i\\
 &\leqslant\varepsilon,
-\end{aligned}$$$
+\end{aligned}
 
 where the last inequality follows from the fact that the binomial distribution is a probability distribution, i.e., $$\sum_{i=1}^n\binom{n}{i}(1-p)^{n-i}p^i=1$$ for all $$n\in\mathbb{N}$$ and $$0<p<1$$. Thus $$T^n$$ binomially converges whenever it converges. I think binomial convergence is in fact equivalent to regular convergence, but I&#39;m not certain and it doesn&#39;t matter for this note anyway since nothing described in this paper makes sense unless $$T^n$$ is assumed to converge regularly.
 
