@@ -35,15 +35,6 @@ We now make a quick interlude to discuss the technical convergence of SLC. A gra
 
 (Intuitively, the aperiodicity condition prevents a configuration where everything just cycles around in a predictable way forever, like in a directed cycle graph.)
 
-The familiar definition of convergence of an infinite sequence says that $$T^n$$ **converges** to $$T^{\star}$$ iff for all $\varepsilon>0$ there exists some $$N\in\mathbb{N}$$ such that for all $$n>N$$, $$\vert T^n-T^{\star}\vert$$ (here we're using the matrix norm defined in the notation section). There is another unfortunately convoluted definition that we will find useful near the end of this note: we say that $$T^n$$ **binomially converges** to $$T^{\star}$$ iff for all $\varepsilon>0$ there exists some $$N\in\mathbb{N}$$ such that for any $$0<p<1$$, $$\lim\limits_{n\to\infty}\sum_{i=N+1}^n\binom{n}{i}(1-p)^{n-i}p^i\vert T^i-T^{\star}\vert<\varepsilon$$. If $$T^n$$ converges to $$T^{\star}$$, then using the $$N$$ given by definition of convergence, we have
-\begin{aligned}
-\lim\limits_{n\to\infty}\sum_{i=N+1}^n\binom{n}{i}(1-p)^{n-i}p^i\vert T^i-T^{\star}\vert&<\lim\limits_{n\to\infty}\sum_{i=N+1}^n\binom{n}{i}(1-p)^{n-i}p^i\varepsilon\\\
-&=\varepsilon\lim\limits_{n\to\infty}\sum_{i=N+1}^n\binom{n}{i}(1-p)^{n-i}p^i\\\
-&\leqslant\varepsilon,
-\end{aligned}
-
-where the last inequality follows from the fact that the binomial distribution is a probability distribution, i.e., $$\sum_{i=1}^n\binom{n}{i}(1-p)^{n-i}p^i=1$$ for all $$n\in\mathbb{N}$$ and $$0<p<1$$. Thus $$T^n$$ binomially converges whenever it converges. I think binomial convergence is in fact equivalent to regular convergence, but I&#39;m not certain and it doesn&#39;t matter for this note anyway since nothing described in this paper makes sense unless $$T^n$$ is assumed to converge regularly.
-
 ## Asynchronous Linear Consensus
 
 In the ALC model, just like in SLC we begin with a state vector $$x_0$$. Let $$P$$ be a probability distribution on the vertices of $$V$$, i.e., a function $$P:V\to [0,1]$$ such that $$\sum_{v\in V} P(v)=1$$. We must assume that $$P(v)\neq 0$$ for every $$v\in V$$, but we make no assumption on the uniformity of $$P$$.
@@ -128,17 +119,16 @@ Note that by replacing $$T$$ with the identity matrix and noting that $$\tilde{1
 
 which we will need later as well.
 
-Given any $$\varepsilon>0$$, we can now show that $$\vert T^{\star}-\tilde{T}^{\star}\vert<\varepsilon$$, from which it immediately follows that $$\vert T^{\star}-\tilde{T}^{\star}\vert=0$$ which implies $$T^{\star}=\tilde{T}^{\star}$$. Since $$T^{\star}=\lim\limits_{n\to\infty}T^n$$, by definition of limits, for any $$\varepsilon>0$$ there exists $$N\in\mathbb{N}$$ such that for any $$n>N$$, $$\vert T^{\star}-T^n\vert<\varepsilon$$.
-
-Here is where we need binomial convergence of $$T^n$$. Let $$N$$ be large enough such that $$\lim\limits_{n\to\infty}\sum_{i=N+1}^{n}\binom{n}{i}(1-P)^{n-i}P^i\left\vert T^i-T^{\star}\right\vert<\varepsilon$$. Then
+Given any $$\varepsilon>0$$, we can now show that $$\vert T^{\star}-\tilde{T}^{\star}\vert<\varepsilon$$, from which it immediately follows that $$\vert T^{\star}-\tilde{T}^{\star}\vert=0$$ which implies $$T^{\star}=\tilde{T}^{\star}$$. Since $$T^{\star}=\lim\limits_{n\to\infty}T^n$$, by definition of limits, for any $$\varepsilon>0$$ there exists $$N\in\mathbb{N}$$ such that for any $$n>N$$, $$\vert T^{\star}-T^n\vert<\varepsilon$$. Then
 \begin{aligned}
 \vert\tilde{T}^{\star}-T^{\star}\vert&=\lim\limits_{n\to\infty}\left\vert\left(\sum_{i=N+1}^{n}\binom{n}{i}(1-P)^{n-i}P^iT^i\right)-T^{\star}\right\vert\\\
 &\mathop{=}\limits^{(eq.2)}\lim\limits_{n\to\infty}\left\vert\sum_{i=N+1}^{n}\binom{n}{i}(1-P)^{n-i}P^i\left(T^i-T^{\star}\right)\right\vert\\\
 &\leqslant\lim\limits_{n\to\infty}\sum_{i=N+1}^{n}\binom{n}{i}(1-P)^{n-i}P^i\left\vert T^i-T^{\star}\right\vert\\\
-&<\varepsilon.
+&<\varepsilon\lim\limits_{n\to\infty}\sum_{i=N+1}^{n}\binom{n}{i}(1-P)^{n-i}P^i\\\
+&\leqslant\varepsilon.
 \end{aligned}
 
-Since $$\varepsilon$$ was chosen arbitrarily, we have that the absolute difference between $$\tilde{T}^{\star}$$ and $$T^{\star}$$ is smaller than every positive real number, so they must in fact be the same matrix. In other words, the asymptotic behavior of SLC is identical to the expected asymptotic behavior of ALC.
+The last inequality uses the fact that the binomial distribution $$\binom{n}{i}(1-P)^{n-i}P^i$$ is a probability distribution and hence by definition $$\sum_{i=1}^{n}\binom{n}{i}(1-P)^{n-i}P^i=1$$ for all $$n$$. Since $$\varepsilon$$ was chosen arbitrarily, we have that the absolute difference between $$\tilde{T}^{\star}$$ and $$T^{\star}$$ is smaller than every positive real number, so they must in fact be the same matrix. In other words, the asymptotic behavior of SLC is identical to the expected asymptotic behavior of ALC.
 
 # Conclusion
 
