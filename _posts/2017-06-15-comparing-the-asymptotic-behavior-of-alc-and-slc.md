@@ -140,8 +140,6 @@ Here is where we need binomial convergence of $$T^n$$. Let $$N$$ be large enough
 
 Since $$\varepsilon$$ was chosen arbitrarily, we have that the absolute difference between $$\tilde{T}^{\star}$$ and $$T^{\star}$$ is smaller than every positive real number, so they must in fact be the same matrix. In other words, the asymptotic behavior of SLC is identical to the expected asymptotic behavior of ALC.
 
-Note that $$(!)$$ in the above equation follows from the fact that $$\binom{n}{i}(1-P)^{n-i}P^i$$ is coordinate-wise a probability distribution (indeed, it is the binomial distribution), and hence is at most $$1$$ for every value of $$i$$.
-
 # Conclusion
 
 ALC is still only an abstract approximation of consensus, but it seems a priori to more closely mimic the behavior of Ripple consensus than SLC does. However, fo making far-reaching mathematical statements, SLC is much more useful in practice, being a deterministic linear difference equation. Having showed that ALC converges on average to the same distribution as SLC, this gives reasonable evidence for the validity of arguments based on SLC.
