@@ -87,7 +87,7 @@ By the binomial theorem, we have
 &=\sum_{i=1}^{n}\binom{n}{i}(1-P)^{n-i}(PT)^i
 \end{aligned}
 
-This is the indexed sum we referred to in the previous section. Since this is defined in terms of powers of $$T$$, it gives a convenient setting for comparing $$\tilde{T}^{\star}$$ and $$T^{\star}$$. Note that $$binom{n}{i}(1-P)^{n-i}P^i$$ is coordinate-wise just a binomial distribution.
+This is the indexed sum we referred to in the previous section. Since this is defined in terms of powers of $$T$$, it gives a convenient setting for comparing $$\tilde{T}^{\star}$$ and $$T^{\star}$$. Note that $$\binom{n}{i}(1-P)^{n-i}P^i$$ is coordinate-wise just a binomial distribution.
 
 Now let $$k\in\mathbb{N}$$ be an arbitrary natural number and consider the $$k$$-th partial sum of $$(eq.1)$$,
 \begin{aligned}
