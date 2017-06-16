@@ -19,9 +19,9 @@ In this note we will compare the asymptotic behavior of SLC to that of ALC and s
 
 ## Notation
 
-Let $$G=(V,E)$$ be a directed graph with adjacency matrix $$A$$. For $$v\in V$$, let $$k^v$$ be the set of neighbors of $$v$$, i.e., $$N^v=\{u\in V\vert(u\to v)\in E\}$$. For simplicity we assume that each node in $$V$$ is indexed by a natural number, and we refer to the node and its index interchangeably. We assume that every node is its own neighbor. Let $$D$$ be the diagonal in-degree matrix. Define the averaging operator $$T$$ by $$T=D^{-1}A$$.
+Let $$G=(V,E)$$ be a directed graph with adjacency matrix $$A$$. For $$v\in V$$, let $$k^v$$ be the set of neighbors of $$v$$, i.e., $$N^v=\\{u\in V\vert(u\to v)\in E\\}$$. For simplicity we assume that each node in $$V$$ is indexed by a natural number, and we refer to the node and its index interchangeably. We assume that every node is its own neighbor. Let $$D$$ be the diagonal in-degree matrix. Define the averaging operator $$T$$ by $$T=D^{-1}A$$.
 
-Throughout the paper we will use a matrix norm defined as follows: Let $$M$$ be an $$m\times n$$ matrix. Then $$\vert M\vert$$ denotes the $$\ell_\infty$$ entry-wise norm of $$M$$, i.e., $$\vert M\vert=\max\{\vert M^{ij}\vert:1\leqslant i \leqslant m,1\leqslant j\leqslant n\}$$. This norm behaves very similarly to the regular absolute value on real numbers, but care should be taken since it doesn't respect products, i.e., $$\vert M\vert\cdot\vert N\vert\neq\vert M\cdot N\vert$$ in general.
+Throughout the paper we will use a matrix norm defined as follows: Let $$M$$ be an $$m\times n$$ matrix. Then $$\vert M\vert$$ denotes the $$\ell_\infty$$ entry-wise norm of $$M$$, i.e., $$\vert M\vert=\max\\{\vert M^{ij}\vert:1\leqslant i \leqslant m,1\leqslant j\leqslant n\\}$$. This norm behaves very similarly to the regular absolute value on real numbers, but care should be taken since it doesn't respect products, i.e., $$\vert M\vert\cdot\vert N\vert\neq\vert M\cdot N\vert$$ in general.
 
 ## Synchronous Linear Consensus
 
@@ -96,7 +96,7 @@ Now let $$k\in\mathbb{N}$$ be an arbitrary natural number and consider the $$k$$
 
 as a function of $$n$$. We want to show that for constant $$k$$, this partial sum goes to zero as $$n$$ increases. To this end, let $$c_k$$ be defined as
 \begin{aligned}
-c_n=\max\{\left\vert\frac{P^i}{i!(1-P)^i}T^i\right\vert:1\leqslant i\leqslant k\}.
+c_n=\max\\{\left\vert\frac{P^i}{i!(1-P)^i}T^i\right\vert:1\leqslant i\leqslant k\\}.
 \end{aligned}
 
 Further let $$p_k(n)$$ be defined as
