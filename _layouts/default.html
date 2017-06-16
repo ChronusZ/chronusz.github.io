@@ -6,31 +6,29 @@
 			<link rel="stylesheet" type="text/css" href="/css/main.css">
 		</head>
 		<body>
-			<nav>
-	    		<ul>
-	        		<li><a href="/">Home</a></li>
-		        	<li><a href="/about">About</a></li>
-	        		<li><a href="/cv">CV</a></li>
-	        		<li><a href="/blog">Blog</a></li>
-	    		</ul>
-			</nav>
 			<div class="container">
 			
 			{{ content }}
 			
 			</div><!-- /.container -->
-			<footer>
-	    		<ul>
-	        		<li><a href="mailto:hankquinlanhub@gmail.com">email</a></li>
-	        		<li><a href="https://github.com/hankquinlan">github.com/hankquinlan</a></li>
-				</ul>
-			</footer>
 		
 			<script type="text/x-mathjax-config">
 			  MathJax.Hub.Config({tex2jax: {inlineMath: [['$','$'], ['\\(','\\)']]}});
 			</script>
 			<script type="text/javascript" async
 			  src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.1/MathJax.js?config=TeX-MML-AM_CHTML">
+			</script>
+
+			<script>
+			  $("script[type='math/tex']").replaceWith(function() {
+			      var tex = $(this).text();
+			      return katex.renderToString(tex, {displayMode: false});
+			  });
+
+			  $("script[type='math/tex; mode=display']").replaceWith(function() {
+			      var tex = $(this).html();
+			      return katex.renderToString(tex.replace(/%.*/g, ''), {displayMode: true});
+			  });
 			</script>
 		</body>
 	</html>
