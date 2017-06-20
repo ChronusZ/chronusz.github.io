@@ -15,7 +15,7 @@ Also if anyone notices something about the model that does not match up with how
 
 On to the model outline.
 
-As always, let $$G=(V,E)$$ be a directed graph with adjacency matrix $$A$$. For a given node $$v\in V$$, let $$k^v$$ be the set of neighbors of $$v$$, i.e., $$N^v=\{u\in V|(u\to v)\in E\}$$. For simplicity we assume that each node in $$V$$ is indexed by a natural number, and we refer to the node and its index interchangeably. We assume that every node is its own neighbor. Let $$D$$ be the diagonal in-degree matrix. Define the **Laplacian operator** $$L$$ by $$L=D-A$$. We call $$X=\{0,1\}^V$$ the **state space** and elements $$x\in X$$ **state vectors**. The components of the state vector $$x$$ are denoted $$x^v$$ for $$v\in V$$. A matrix acts on a state vector $$x$$ by treating $$x$$ as an element of the vector space $$\mathbb{R}^V$$. The result of applying $$D^{-1}L$$ to the state vector $$x$$ is a (real) vector whose $$v$$-th component is the difference between $$x^v$$ and the average value across the neighbors of $$v$$. Although graph theorists like to call elements of $$V$$ vectors, we try to reserve this terminology for referring only to elements of $$X$$ or $$\mathbb{R}^V$$ and instead always refer to elements of $$V$$ as **nodes**.
+As always, let $$G=(V,E)$$ be a directed graph with adjacency matrix $$A$$. For a given node $$v\in V$$, let $$k^v$$ be the set of neighbors of $$v$$, i.e., $$N^v=\{u\in V\vert(u\to v)\in E\}$$. For simplicity we assume that each node in $$V$$ is indexed by a natural number, and we refer to the node and its index interchangeably. We assume that every node is its own neighbor. Let $$D$$ be the diagonal in-degree matrix. Define the **Laplacian operator** $$L$$ by $$L=D-A$$. We call $$X=\{0,1\}^V$$ the **state space** and elements $$x\in X$$ **state vectors**. The components of the state vector $$x$$ are denoted $$x^v$$ for $$v\in V$$. A matrix acts on a state vector $$x$$ by treating $$x$$ as an element of the vector space $$\mathbb{R}^V$$. The result of applying $$D^{-1}L$$ to the state vector $$x$$ is a (real) vector whose $$v$$-th component is the difference between $$x^v$$ and the average value across the neighbors of $$v$$. Although graph theorists like to call elements of $$V$$ vectors, we try to reserve this terminology for referring only to elements of $$X$$ or $$\mathbb{R}^V$$ and instead always refer to elements of $$V$$ as **nodes**.
 
 We ignore relativistic issues and assume the existence of a continuous **absolute time** which is represented by a real number $$t\in[0,\infty)]$$. Each node keeps track of a discrete **internal timestep**, which is represented by a natural number $$n^v\in\mathbb{N}$$. We will often identify $$n^v$$ with the absolute time at which $$n^v$$ is called. Let $$\tau:\mathbb{N}\to[0.5,1)]$$ be a monotone-increasing function. We call $$\tau$$ the **threshold function**. For a given timestep $$n^v$$, $$\tau(n)$$ gives the current threshold of agreement for the node $$v$$; note that although $$\tau$$ takes as input the internal timestep of a node, the function is assumed to be the same for every node. Thus for instance, node $$a$$ may get to its third timestep after $$3.1$$ seconds while node $$b$$ might get to its third timestep after only $$2.8$$ seconds, but the threshold at that step will be the same for both $$a$$ and $$b$$.
 
@@ -28,7 +28,7 @@ For a given absolute time $$t$$, let $$x_t$$ denote the current **absolute state
 The algorithm behaves for a given node $$v$$ at absolute time $$t$$ and internal time $$n^v$$ as follows:
 
 1. For every neighbor $$u\in N^v$$, check the most recent message which has arrived from $$u$$, and update $$l_n^v$$ accordingly.
-2. Compute $$S=\frac{1}{|N^v|}\sum_{u\in N^v} l_n^{v,u}$$. If $$S>\tau(t^v)$$, set $$x^v=1$$. If $$S\leqslant\tau(n^v)$$, set $$x^v=0$$.
+2. Compute $$S=\frac{1}{\vert N^v\vert }\sum_{u\in N^v} l_n^{v,u}$$. If $$S>\tau(t^v)$$, set $$x^v=1$$. If $$S\leqslant\tau(n^v)$$, set $$x^v=0$$.
 3. For each edge $$e\in E$$ pointing out from $$v$$, pick a number $$t^e$$ according to $$dt^e$$ and broadcast the new value of $$x^v$$ so that it arrives at $$t+t^e$$.
 4. Pick a number $$t^v$$ according to $$dt^v$$, and wait until time $$t+t^v$$.
 
@@ -40,7 +40,7 @@ Here I outline the basic idea I have for analyzing the model.
 
 We start by defining the **conflict** $$\eta(x)$$ of a state vector $$x\in X$$ as
 $$$\begin{aligned}
-\eta(x):=\vert\vert Lx\vert\vert_1=\sum_{v\in V} |L^v\cdot x|,
+\eta(x):=\vert\vert Lx\vert\vert_1=\sum_{v\in V} \vert L^v\cdot x\vert ,
 \end{aligned}$$$
 where $$L^v$$ is the $$v$$-th row vector of the Laplacian matrix, and $$\cdot$$ is the usual dot product.
 
