@@ -44,7 +44,7 @@ The uppercase letters $$Q,R,S$$ should be used to refer to cliques. Note that wh
 
 The following visualization of cliques works well in my opinion:
 
-[clique_blob.png](https://raw.githubusercontent.com/ChronusZ/chronusz.github.io/master/images/clique_blob.png "Visualization of cliques")
+<p align="center"><img src="https://raw.githubusercontent.com/ChronusZ/chronusz.github.io/master/images/clique_blob.png"></p>
 
 ## Notations for the Validation Process
 
@@ -54,7 +54,7 @@ For each node $$v\in V$$, the ledger initially proposed by $$v$$ is denoted $$p(
 
 Two nodes $$u$$ and $$v$$ are said to **align** if whenever both nodes accept some ledger, the ledger accepted by them is the same. Thus if $$u$$ and $$v$$ align, it could be the case that $$l(u)=A$$ and $$l(v)=\bot$$, but it can never be the case that $$l(u)=A$$ and $$l(v)=B$$ for some ledgers $$A\neq B$$. We use the notation $$v\sim u$$ to denote that $$v$$ and $$u$$ are aligned. This is a reflexive, symmetric relation, but ***it is not transitive*** as the following example shows:
 
-[nontransitive_alignment.png](https://github.com/ChronusZ/chronusz.github.io/blob/master/images/nontransitive_alignment.png?raw=true "A situation where alignment is nontransitive")
+<p align="center"><img src="https://raw.githubusercontent.com/ChronusZ/chronusz.github.io/master/images/nontransitive_alignment.png"></p>
 
 For this graph, it is easily seen that $$u\sim w$$ and $$v\sim w$$ by the condition given in the German paper. However, with the ledgers proposed as above, $$u$$ accepts ledger $$B$$ whereas $$v$$ accepts ledger $$A$$, so $$u\nsim v$$.
 
