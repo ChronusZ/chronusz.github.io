@@ -44,7 +44,7 @@ The uppercase letters $$Q,R,S$$ should be used to refer to cliques. Note that wh
 
 The following visualization of cliques works well in my opinion:
 
-[clique_blob.png](https://github.com/ChronusZ/chronusz.github.io/blob/master/images/clique_blob.png?raw=true "Visualization of cliques")
+[clique_blob.png](https://raw.githubusercontent.com/ChronusZ/chronusz.github.io/master/images/clique_blob.png "Visualization of cliques")
 
 ## Notations for the Validation Process
 
