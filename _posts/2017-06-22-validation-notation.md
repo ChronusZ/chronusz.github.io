@@ -48,6 +48,8 @@ The following visualization of cliques works well in my opinion:
 
 ## Notations for the Validation Process
 
+#### General Notation
+
 Validation begins with each node **proposing** a **ledger**. When discussing validation, I don't think it's useful to explicitly consider the ledgers as consisting of a set of transactions. Instead they can simply be considered as elements in an arbitrary set. We can use the uppercase letters $$A,B,C,D$$ to refer to ledgers, or we can denote them simply by natural numbers. Obviously if the nodes are being labelled by natural numbers the ledgers should be labelled using letters.
 
 For each node $$v\in V$$, the ledger initially proposed by $$v$$ is denoted $$p(v)$$. At the end of validation, each node either **accepts** a ledger or **sits**, meaning it doesn't accept any ledger. The ledger accepted by $$v$$ is denoted by $$l(v)$$ ('p' for proposal, 'l' for... ledger?). If $$v$$ sits, then $$l(v)=\bot$$.
@@ -57,6 +59,22 @@ Two nodes $$u$$ and $$v$$ are said to **align** if whenever both nodes accept so
 <p align="center"><img src="https://raw.githubusercontent.com/ChronusZ/chronusz.github.io/master/images/nontransitive_alignment.png"></p>
 
 For this graph, it is easily seen that $$u\sim w$$ and $$v\sim w$$ by the condition given in the German paper. However, with the ledgers proposed as above, $$u$$ accepts ledger $$B$$ whereas $$v$$ accepts ledger $$A$$, so $$u\nsim v$$.
+
+Note that validation succeeds if and only if every pair of nodes is aligned.
+
+#### Comparing Protocols
+
+Aside from discussing the safety of Ripple's current validation protocol, we are also interested in the possibility of improving the validation protocol. For this reason it is useful to have a language for talking about modifications of validation.
+
+A **validation protocol** is any distributed algorithm where nodes communicate only with their immediate neighbors and operate with the goal of validating consensus. The validation protocol we currently use is referred to as **Ripple validation**.
+
+For a given protocol $$\Lambda$$, most properties of validation can be expressed by saying "[something happens] under $$\Lambda$$". For instance, we say that two nodes in a graph $$G$$ **align under** $$\Lambda$$ if they are aligned when the operating protocol is $$\Lambda$$. We say that **validation succeeds under** $$\Lambda$$ on $$G$$ or just $$\Lambda$$ **succeeds** on $$G$$ if every pair of nodes in $$G$$ is aligned under $$\Lambda$$.
+
+Given two validation protocols $$\Lambda$$ and $$\Theta$$, we want some way of comparing them. We say $$\Lambda$$ **implies** $$\Theta$$, written $$\Lambda\rightarrow\Theta$$ (or $$\Lambda$$-\>$$\Theta$$ without LaTeX), if $$Theta$$ succeeds whenever $$Lambda$$ succeeds. This is understood as $$\Lambda$$ being less safe than $$\Theta$$. We say $$\Lambda$$ **is equivalent to** $$\Theta$$, written $$\Lambda\leftrightarrow\Theta$$ (or $$\Lambda$$\<-\>$$\Theta$$ without LaTeX), if $$\Lambda\rightarrow\Theta$$ and $$\Theta\rightarrow\Lambda$$.
+
+There might be an occasion when we need a stricter comparison between validation protocols: we say $$\Lambda$$ **strictly implies** $$\Theta$$, written $$\Lambda\Rightarrow\Theta$$ (or $$\Lambda$$=\>$$\Theta$$ without LaTeX), if for any two nodes $$u,v$$ in any given graph, $$u$$ and $$v$$ align under $$\Theta$$ whenever they align under $$\Lambda$$. Strict implication of course implies regular implication. Similarly, we say $$\Lambda$$ **is strictly equivalent to** $$\Theta$$, written $$\Lambda\Leftrightarrow\Theta$$ (or $$\Lambda$$\<=\>$$\Theta$$ without LaTeX), if $$\Lambda\Rightarrow\Theta$$ and $$\Theta\Rightarrow\Lambda$$.
+
+Often we consider validation protocols with some safety threshold $$0.5\leqslant\tau<1$$. This can be considered as defining a **paramaterized family of protocols** or by minor abuse of language **parameterized protocol** $$\Lambda_{\tau}$$, with $$\Lambda_{\tau}\rightarrow\Theta_{\tau'}$$ for every $$\tau'\geqslant \tau$$. I think there may be parameterized protocols of interest where $$\Lambda_{\tau}\nRightarrow\Theta_{\tau'}$$ for every $$\tau'\geqslant \tau$$; especially protocols with multiple rounds, where the global network structure can have more of an impact on the decision of a single node.
 
 ## Notations for Math Concepts
 
