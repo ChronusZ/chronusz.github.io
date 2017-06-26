@@ -36,22 +36,30 @@ When $$f=1$$, we tested graphs of nodes $$5,6,7,$$ and $$8$$. Our results showed
 
 **$$5$$ nodes**:
 Total graphs: $$21$$
+
 Graphs which are safe under Ripple validation: $$15$$
+
 Graphs which are safe under timid validation: $$18$$
 
 **$$6$$ nodes**:
 Total graphs: $$112$$
+
 Graphs which are safe under Ripple validation: $$56$$
+
 Graphs which are safe under timid validation: $$97$$
 
 **$$7$$ nodes**:
 Total graphs: $$853$$
+
 Graphs which are safe under Ripple validation: $$265$$
+
 Graphs which are safe under timid validation: $$719$$
 
 **$$8$$ nodes**:
 Total graphs: $$11117$$
+
 Graphs which are safe under Ripple validation: $$1255$$
+
 Graphs which are safe under timid validation: $$7672$$
 
 Although more testing is of course necessary to make an unbiased judgement about how much safer timid validation is compared to Ripple validation, these numbers do seem to suggest a quite reasonable improvement in safety.
