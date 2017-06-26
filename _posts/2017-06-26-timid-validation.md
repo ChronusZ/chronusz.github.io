@@ -29,6 +29,8 @@ At the beginning of validation, each node $$v\in V_G$$ picks a ledger, denoted $
 
 Note that by step $$1$$, a node will never validate if it wouldn't have validated under Ripple validation. Thus timid validation is strictly safer than Ripple validation.
 
+Step $$2$$ of the algorithm is a "worst-case analysis"; it marks a node as safe if and only if there is no possibility for that node to validate a different ledger than the one we are proposing.
+
 ## Heuristics
 
 We have yet to do much testing of the algorithm, so our heuristics are currently limited. Unlike with Ripple validation, we do not have a closed formula for determining when a graph is forkable under timid validation.
