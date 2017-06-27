@@ -18,13 +18,13 @@ We assume that every node has access to the global topology. However, by the way
 At the beginning of validation, each node $$v\in V_G$$ picks a ledger, denoted $$X(v)$$. Each node runs the following algorithm to determine whether or not it should validate:
 
 1. Look at the ledger of each node in $$UNL_v$$. If less than $$80\%$$ of the ledgers agree with $$v$$, immediately reject validation and terminate the algorithm.
-2. For each node $$u\in V_G$$, switch on the value of $$X(u)$$:
+2. For each node $$u\in V_G$$, switch on the value of $$X(u)$$ (Let $$\bot$$ denote "unknown"):
 
     a. If $$X(u)=X(v)$$, mark $$u$$ as safe.
     
-    b. If $$X(u)\neq X(v)$$, mark $$u$$ as safe iff $$0.2\vert UNL_u \vert<\vert UNL_v\cap UNL_u\vert - \#\{w\in UNL_v\cap UNL_u\vert X(w)=X(u)\}$$.
+    b. If $$X(u)\neq X(v)$$ and $$X(u)\neq\bot$$, mark $$u$$ as safe iff $$0.2\vert UNL_u \vert<\vert UNL_v\cap UNL_u\vert - \#\{w\in UNL_v\cap UNL_u\vert X(w)=X(u)\vee X(w)=\bot\}$$.
     
-    c. If $$X(u)$$ is unknown, mark $$u$$ as safe iff for EVERY ledger $$L$$, $$0.2\vert UNL_u \vert<\vert UNL_v\cap UNL_u\vert - \#\{w\in UNL_v\cap UNL_u\vert X(w)=L\}$$.
+    c. If $$X(u)=\bot$$, mark $$u$$ as safe iff for EVERY ledger $$L$$, $$0.2\vert UNL_u \vert<\vert UNL_v\cap UNL_u\vert - \#\{w\in UNL_v\cap UNL_u\vert X(w)=L\vee X(w)=\bot\}$$.
 3. Count up all the nodes which have not been marked safe. If this number is greater than or equal to $$f$$, reject validation and terminate the algorithm. Otherwise accept validation and terminate the program.
 
 Note that by step $$1$$, a node will never validate if it wouldn't have validated under Ripple validation. Thus timid validation is strictly safer than Ripple validation.
