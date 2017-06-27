@@ -35,10 +35,11 @@ Recall that a graph is safe under Ripple consensus iff for every pair of nodes $
 
 If a node $$v$$ validates under Ripple consensus, then for any node $$u$$ and any ledger $$L$$ contradicting $$X(v)$$, we must have that $$\#\{w\in UNL_v\cap UNL_u\vert X(w)=L\}<0.2\vert UNL_v\vert$$. Thus
 \begin{aligned}
-\vert UNL_v\cap UNL_u\vert - \#\{w\in UNL_v\cap UNL_u\vert X(w)=L\}&>\vert UNL_v\cap UNL_u\vert - 0.2\vert UNL_v\vert \\\
-&>\lfloor 0.2\vert UNL_u\vert\rfloor
+\vert UNL_v\cap UNL_u\vert - \#\{w\in UNL_v\cap UNL_u\vert X(w)=L\}&>\vert UNL_v\cap UNL_u\vert - 0.2\vert UNL_v\vert\\\
+&>\lfloor 0.2\vert UNL_u\vert\rfloor.
 \end{aligned}
-and since $$\vert UNL_v\cap UNL_u\vert - \#\{w\in UNL_v\cap UNL_u\vert X(w)=L\}$$ is an integer, $$0.2\vert UNL_u \vert<\vert UNL_v\cap UNL_u\vert - \#\{w\in UNL_v\cap UNL_u\vert X(w)=L\}$$ thus always holds. Thus in the case of graphs where Ripple consensus guarantees safety, timid consensus will behave in exactly the same way.
+
+Since $$\vert UNL_v\cap UNL_u\vert - \#\{w\in UNL_v\cap UNL_u\vert X(w)=L\}$$ is an integer, $$0.2\vert UNL_u \vert<\vert UNL_v\cap UNL_u\vert - \#\{w\in UNL_v\cap UNL_u\vert X(w)=L\}$$ thus always holds. Thus in the case of graphs where Ripple consensus guarantees safety, timid consensus will behave in exactly the same way.
 
 ## Heuristics
 
