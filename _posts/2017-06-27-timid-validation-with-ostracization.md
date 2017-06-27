@@ -23,7 +23,7 @@ At the beginning of validation, each node $$v\in V_G$$ picks a ledger, denoted $
     b. If $$X(u)\neq X(v)$$, mark $$u$$ as safe iff $$0.2\vert UNL_u \vert<\vert UNL_v\cap UNL_u\vert - \#\{w\in UNL_v\cap UNL_u\vert X(w)=X(u)\}$$.
     
     c. If $$X(u)$$ is unknown, mark $$u$$ as safe iff for EVERY ledger $$L$$, $$0.2\vert UNL_u \vert<\vert UNL_v\cap UNL_u\vert - \#\{w\in UNL_v\cap UNL_u\vert X(w)=L\}$$.
-3. If we found any node in $$V_G\setminus F(v)$$ which we did not mark as safe, reject validation and terminate the algorithm. Otherwise accept validation and terminate the program.
+3. If every node in $$V_G\setminus F(v)$$ is marked as safe, accept validation. Otherwise reject validation.
 
 This protocol still boasts all the specs of regular timid validation: a node will never validate if it wouldn't have validated under Ripple validation, and in any graph which is guaranteed safe under Ripple validation, timid validation with ostracization behaves exactly the same as Ripple validation.
 
