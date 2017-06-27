@@ -33,11 +33,7 @@ Step $$2$$ of the algorithm is a "worst-case analysis"; it marks a node as safe 
 
 Recall that a graph is safe under Ripple consensus iff for every pair of nodes $$v,u\in V_G$$, $$\vert UNL_v\cap UNL_u\vert>\lfloor 0.2\vert UNL_v\vert\rfloor + \lfloor 0.2\vert UNL_u\vert\rfloor$$. In fact, since $$\vert UNL_v\cap UNL_u\vert$$ is an integer, we have $$\vert UNL_v\cap UNL_u\vert-0.2\vert UNL_v\vert>\lfloor 0.2\vert UNL_u\vert\rfloor$$.
 
-If a node $$v$$ validates under Ripple consensus, then for any node $$u$$ and any ledger $$L$$ contradicting $$X(v)$$, we must have that $$\#\{w\in UNL_v\cap UNL_u\vert X(w)=L\}<0.2\vert UNL_v\vert$$. Thus
-\begin{aligned}
-\vert UNL_v\cap UNL_u\vert - \#\{w\in UNL_v\cap UNL_u\vert X(w)=L\}&>\vert UNL_v\cap UNL_u\vert - 0.2\vert UNL_v\vert\\\
-&>\lfloor 0.2\vert UNL_u\vert\rfloor.
-\end{aligned}
+If a node $$v$$ validates under Ripple consensus, then for any node $$u$$ and any ledger $$L$$ contradicting $$X(v)$$, we must have that $$\#\{w\in UNL_v\cap UNL_u\vert X(w)=L\}<0.2\vert UNL_v\vert$$. Thus $$\vert UNL_v\cap UNL_u\vert - \#\{w\in UNL_v\cap UNL_u\vert X(w)=L\}>\vert UNL_v\cap UNL_u\vert - 0.2\vert UNL_v\vert>\lfloor 0.2\vert UNL_u\vert\rfloor$$.
 
 Since $$\vert UNL_v\cap UNL_u\vert - \#\{w\in UNL_v\cap UNL_u\vert X(w)=L\}$$ is an integer, $$0.2\vert UNL_u \vert<\vert UNL_v\cap UNL_u\vert - \#\{w\in UNL_v\cap UNL_u\vert X(w)=L\}$$ thus always holds. Thus in the case of graphs where Ripple consensus guarantees safety, timid consensus will behave in exactly the same way.
 
