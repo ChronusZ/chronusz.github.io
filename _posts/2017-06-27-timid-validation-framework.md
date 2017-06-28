@@ -79,6 +79,8 @@ These tenets lead us to the following amusingly simple guideline: **Ostracize a 
 
 Note that if we choose David's proposal for learning the global topology, then it might be best to do something like **Ostracize a node whenever it has a UNL size smaller than e.g. $$90\%$$ of yours**. This is worse for tenet $$3$$, but it lowers the likelyhood that two nodes will ostracize each other due to asynchronous knowledge of the network topology, and it still is reasonable at satisfying tenet $$2$$.
 
+By suggestion of Haoxing, we can extend this guideline further to maximize fulfillment of tenet $$3$$; **whenever two nodes have the same size UNL** (or in the case of David's proposal, when neither is smaller than $$90\%$$ of the other), we can totally order the nodes by ID, so that **the node with the smaller ID ostracizes the node with the larger ID**. Under this guideline, between every pair of nodes exactly one node will ostracize the other, so forward progress is maximized while still remaining safe. Further, if we expect in general that nodes which joined earlier will have smaller IDs, this gives slight favor to nodes which have been running the protocol longer. Since UNL size is still the primary factor though, the incentive to become well-connected remains primary.
+
 ## Timid Validation
 
 For completeness we recall here the protocol outline for timid validation with ostracization. Let $$V_G$$ refer to the set of nodes of the graph, and for each node $$v\in V_G$$ let $$F(v)\subseteq V_G$$ refer to the set of nodes $$v$$ has ostracized.
