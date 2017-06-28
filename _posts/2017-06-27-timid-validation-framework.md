@@ -87,12 +87,6 @@ For completeness we recall here the protocol outline for timid validation with o
 
 At the beginning of validation, each node $$v\in V_G$$ picks a ledger, denoted $$X(v)$$. Each node runs the following algorithm to determine whether or not it should validate:
 
-1. Look at the ledger of each node in $$UNL_v$$. If less than $$80\%$$ of the ledgers agree with $$v$$, immediately reject validation and terminate the algorithm.
-2. For each node $$u\in V_G\setminus F(v)$$, switch on the value of $$X(u)$$ (Let $$\bot$$ denote "unknown"):
-
-    a. If $$X(u)=X(v)$$, mark $$u$$ as safe.
-    
-    b. If $$X(u)\neq X(v)$$ and $$X(u)\neq\bot$$, mark $$u$$ as safe iff $$0.2\vert UNL_u \vert<\vert UNL_v\cap UNL_u\vert - \#\{w\in UNL_v\cap UNL_u\vert X(w)=X(u)\vee X(w)=\bot\}$$.
-    
-    c. If $$X(u)=\bot$$, mark $$u$$ as safe iff for EVERY ledger $$L$$, $$0.2\vert UNL_u \vert<\vert UNL_v\cap UNL_u\vert - \#\{w\in UNL_v\cap UNL_u\vert X(w)=L\vee X(w)=\bot\}$$.
-3. If every node in $$V_G\setminus F(v)$$ is marked as safe, accept validation. Otherwise reject validation.
+1. Wait until we have heard the proposal of enough nodes in $$UNL_v$$ to where $$80\%$$ of them agree on a single ledger; if this ever becomes impossible, immediately reject validation and terminate the algorithm. If there was actually at least $$80\%$$ agreement on some ledger $$L$$, keep track of the ledger $$L$$ as a private variable.
+2. Let $$\bot$$ denote "unknown". For each node $$u\in V_G\setminus F(v)$$, mark $$u$$ as safe iff for every ledger $$L'\neq L$$, $$0.2\vert UNL_u \vert<\vert UNL_v\cap UNL_u\vert - \#\{w\in UNL_v\cap UNL_u\vert X(w)=L'\vee X(w)=\bot\}$$.
+3. If every node in $$V_G\setminus F(v)$$ is marked as safe, fully validate the ledger $$L$$. Otherwise reject validation.
