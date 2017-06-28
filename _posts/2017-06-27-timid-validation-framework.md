@@ -5,11 +5,11 @@ date: 2017-06-27
 use_math: true
 ---
 
-# Framework
+# Timid Validation Framework
 
 ## Introduction
 
-This is a loose description of the complete general framework we hope to be implemented for timid validation. Since timid validation changes the information each operator uses to make their decisions, it does not suffice to simply consider the "high-view" protocol. Instead we need some consideration as to what framework is needed in order to let the operators actually learn this extra information.
+This is a loose description of the general framework we hope to be implemented for timid validation. Since timid validation changes the information each operator uses to make their decisions, it does not suffice to simply consider the "high-view" protocol. Instead we need some consideration as to what framework is needed in order to let the operators actually learn this extra information.
 
 ## Determining the Global Topology
 
