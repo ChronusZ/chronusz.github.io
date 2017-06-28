@@ -33,8 +33,8 @@ At the beginning of validation, each node $$v\in V_G$$ picks a ledger, denoted $
     b. If $$X(u)\neq X(v)$$ and $$X(u)\neq\bot$$, mark $$u$$ as *potentially safe* iff $$0.2\vert UNL_u \vert<\vert UNL_v\cap UNL_u\vert - \#\{w\in UNL_v\cap UNL_u\vert X(w)=X(u)\}$$.
     
     c. If $$X(u)=\bot$$, mark $$u$$ as *potentially safe* iff for EVERY ledger $$L$$, $$0.2\vert UNL_u \vert<\vert UNL_v\cap UNL_u\vert - \#\{w\in UNL_v\cap UNL_u\vert X(w)=L\}$$.
-5. If every node in $$V_G\setminus F(v)$$ is marked as *potentially safe*, wait for time $$D$$.
+5. If every node in $$V_G\setminus F(v)$$ is marked as *potentially safe*, wait for time $$D$$. Otherwise immediately reject validation and terminate the algorithm.
 6. Repeat step $$2$$ with any new information we might have received about the votes of our neighbors.
-3. If every node in $$V_G\setminus F(v)$$ is then marked as *actually safe*, immediately accept validation and terminate the algorithm. Otherwise reject validation and terminate the algorithm.
+7. If every node in $$V_G\setminus F(v)$$ is then marked as *actually safe*, accept validation. Otherwise reject validation.
 
 Step $$4$$ is the "optimistic step". It determines whether there is any chance that given new information about the votes not yet received from your neighbors you might have passed step $$2$$. If so we wait a little while longer to see if our optimistic judgement was correct.
