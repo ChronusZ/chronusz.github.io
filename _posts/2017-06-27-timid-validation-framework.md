@@ -71,7 +71,7 @@ In looking for a guideline under which a node should decide to ostracize another
 
 The first tenet is of course important for safety. The only situation under which two nodes can't fork despite both ostracizing each other is when they have sufficient UNL overlap such that they would be aligned under Ripple validation; but in this case ostracizing each other doesn't do anything anyway (since they'll both always think the other is safe regardless), so in this situation ostracizing each other doesn't help anything. Thus there is no situation where both nodes ostracizing each other is both safe and useful, so it should always be avoided.
 
-The second tenet is important because it gives incentive to be well-connected. If a node is poorly-connected, then that's its own fault and it should be the one halting, not everyone else.
+The second tenet is important because it preserves the incentive to be well-connected. If a node is poorly-connected, then that's its own fault and it should be the one halting, not everyone else.
 
 The third tenet is just an optimization consideration; ostracizing a node increases the chance that you'll validate (or at least it doesn't decease the chance), so if it doesn't cause any safety concerns then one should ostracize as many nodes as possible to allow oneself to progress more easily.
 
