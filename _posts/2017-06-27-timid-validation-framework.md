@@ -64,7 +64,9 @@ This is when a node ostracizes another node not necessarily because it thinks th
 In looking for a guideline under which a node should decide to ostracize another node for performance, we maintain three tenets in order of decreasing importance:
 
 1) Two nodes which correctly follow the guideline should never simultaneously ostracize each other.
+
 2) If we need to choose between a well-connected node ostracizing a poorly-connected node or visa-versa, we should opt for the former.
+
 3) As long as it can't contradict the first tenet, a node should ostracize as many nodes as possible.
 
 The first tenet is of course important for safety. The only situation under which two nodes can't fork despite both ostracizing each other is when they have sufficient UNL overlap such that they would be aligned under Ripple validation; but in this case ostracizing each other doesn't do anything anyway (since they'll both always think the other is safe regardless), so in this situation ostracizing each other doesn't help anything. Thus there is no situation where both nodes ostracizing each other is both safe and useful, so it should always be avoided.
