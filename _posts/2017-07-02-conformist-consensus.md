@@ -27,7 +27,7 @@ Note that the only issue in the situation above was that the nodes failed to acc
 
 Specifically, let $$v\in V_G$$ be a node, and for each node $$u\in UNL_v$$, let $$X(u)$$ be the ledger $$v$$ thinks $$u$$ voted for in the previous validation round. If $$v$$ has not yet heard from $$u$$ since the start of the previous validation round, then set $$X(u)=\bot$$. Then $$v$$ will enter wrong ledger mode and attempt to switch to working on the ledger $$L\neq X(v)$$ iff for every $$L'\neq L$$,
 \begin{aligned}
-\#\{u\in UNL_v:X(u)=L\}>\#\{u\in UNL_v:X(u)=L'\vee X(u)=\bot\}.
+\\#\\{u\in UNL_v:X(u)=L\\}>\\#\\{u\in UNL_v:X(u)=L'\vee X(u)=\bot\\}.
 \end{aligned}
 
 Basically, we assume that among the votes we have learned, if there are $$p_j$$ nodes which voted for $$L_j$$, we ask if $$L_i$$ is still the most popular. If this is the case for every possible assignment of $$p_j$$, then we have absolute proof that $$L_i$$ is in fact the most popular ledger.
