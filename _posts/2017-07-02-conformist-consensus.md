@@ -30,7 +30,7 @@ Specifically, let $$v\in V_G$$ be a node, and for each node $$u\in UNL_v$$, let 
 \\#\\{u\in UNL_v:X(u)=L\\}>\\#\\{u\in UNL_v:X(u)=L'\vee X(u)=\bot\\}.
 \end{aligned}
 
-Basically, we assume that among the votes we have learned, we assume that all of them voted for $$L'$$ and ask if $$L$$ is still the most popular ledger. If this is true for every $$L'$$, then we have proof that $$L$$ is indeed the most popular ledger in our UNL.
+Basically, we assume that every node in our UNL which we have not heard from voted for $$L'$$ and ask if $$L$$ is still the most popular ledger. If this is true for every $$L'$$, then we have proof that $$L$$ is indeed the most popular ledger in our UNL.
 
 The above concludes the safety modification that stubborn correction proposes. We could stop there having gained proveable safety, but having made the above change, there is a rather nice optimization that we can make without losing safety. This optimization helps to speed up the rate at which the network unanimously adopts the most popular ledger.
 
