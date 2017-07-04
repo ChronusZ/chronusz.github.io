@@ -25,12 +25,21 @@ This is of course an absurdly contrived situation, but it shows that with suffic
 
 Note that the only issue in the situation above was that the nodes failed to accurately learn the most popular ledger and hence switched to a worse one. Stubborn correction makes it so that nodes will not go into wrong ledger mode unless they have *proof* that doing so is actually the good thing to do.
 
-Specifically, let $$v\in V_G$$ be a node, and for each node $$u\in UNL_v$$, let $$X(u)$$ be the ledger $$v$$ thinks $$u$$ voted for in the previous validation round. If $$v$$ has not yet heard from $$u$$ since the start of the previous validation round, then set $$X(u)=\bot$$. Then $$v$$ will enter wrong ledger mode and attempt to switch to working on the ledger $$L\neq X(v)$$ iff for every $$L'\neq L$$,
+Let $$v\in V_G$$ be a node, and for each node $$u\in UNL_v$$, let $$X(u)$$ be the ledger $$v$$ thinks $$u$$ voted for in the previous validation round. If $$v$$ has not yet heard from $$u$$ since the start of the previous validation round, then set $$X(u)=\bot$$. Then $$v$$ will enter wrong ledger mode and attempt to switch to working on the ledger $$L\neq X(v)$$ iff for every $$L'\neq L$$,
 \begin{aligned}
 \\#\\{u\in UNL_v:X(u)=L\\}>\\#\\{u\in UNL_v:X(u)=L'\vee X(u)=\bot\\}.
 \end{aligned}
 
 Basically, we assume that every node in our UNL which we have not heard from voted for $$L'$$ and ask if $$L$$ is still the most popular ledger. If this is true for every $$L'$$, then we have proof that $$L$$ is indeed the most popular ledger in our UNL.
+
+This basically works, but it runs into an issue for example if $$v$$ is working on ledger $$A$$ which only has $$20\%$$ support, while there are ledgers $$B$$ and $$C$$ both with $$40\%$$ support; in this case $$v$$ would not change its vote even though it obviously is working on the wrong ledger. In this situation $$v$$ should just pick either $$B$$ or $$C$$ and run with it. This should be a deterministic choice though; in the event that several nodes are in this same situation, we would want them all to default to the same ledger rather than choosing randomly. Hence we make the following minor technical adjustment to the above rule:
+
+Define the function $$\chi(L,L')$$ to output value $$1$$ if the ID of $$L$$ is greater than the ID of $$L'$$, and $$0$$ otherwise. Then $$v$$ will enter wrong ledger mode and attempt to switch to working on the ledger $$L\neq X(v)$$ iff for every $$L'\neq L$$,
+\begin{aligned}
+\\#\\{u\in UNL_v:X(u)=L\\}+\chi(L,L')>\\#\\{u\in UNL_v:X(u)=L'\vee X(u)=\bot\\}.
+\end{aligned}
+
+Thus in the event that several ledgers are all tied for popularity, the algorithm will just favor the ledger with the lowest ID.
 
 The above concludes the safety modification that stubborn correction proposes. We could stop there having gained proveable safety, but having made the above change, there is a rather nice optimization that we can make without losing safety. This optimization helps to speed up the rate at which the network unanimously adopts the most popular ledger.
 
@@ -39,20 +48,22 @@ Note that because of the way nodes resist change unless they know that they are 
 With this optimization in mind, the proposed protocol for entering wrong ledger mode under stubborn correction is as follows. Every timer entry during consensus, nodes run
 
 1. For each node $$u\in UNL_v$$, check if $$u$$ went into wrong ledger mode since the end of the last timer entry. If so update the value of $$X(u)$$ accordingly.
-2. Check if there is some ledger $$L\neq X(v)$$ a peer is working on such that for every $$L'\neq L$$, $$\#\{u\in UNL_v:X(u)=L\}>\#\{u\in UNL_v:X(u)=L'\vee X(u)=\bot\}.$$ If so, enter wrong ledger mode and switch to $$L$$, and broadcast that we have done so. Otherwise do nothing until the next timer entry.
+2. Check if there is some ledger $$L\neq X(v)$$ a peer is working on such that for every $$L'\neq L$$, $$\#\{u\in UNL_v:X(u)=L\}+\chi(L,L')>\#\{u\in UNL_v:X(u)=L'\vee X(u)=\bot\}.$$ If so, enter wrong ledger mode and switch to $$L$$, and broadcast that we have done so. Otherwise do nothing until the next timer entry.
 
 
 ## Conformist Validation
 
-Conformist validation is actually very similar to timid validation, except that it just replaces "$$80\%$$ support" with "most popular" in every instance where it is relevant. We assume that ostracization and optimistic waiting are both being used; note however that a naive implementation of performance ostracization can lead to safety issues for conformist validation, in contrast with timid validation. We highlight this discrepancy in the analysis.
+Conformist validation is actually very similar to timid validation; the main change is just to replace "$$80\%$$ support" with "most popular" everywhere. One could easily add an "optimistic waiting" optimization layer on top of conformist validation (it would work just like adding optimistic waiting to timid validation), but we avoid doing so here to maximize clarity. Unfortunately, performance ostracization leads to issues with future-safety, as we highlight in the analysis.
 
-As always, we assume every node has access to the global topology and every node $$v\in V_G$$ has an associated set $$F(v)\subseteq V_G$$ consisting of all the nodes $$v$$ has ostracized. We also have an extra time parameter $$D$$, which is the length of time a node is willing to wait in order to confirm an optimistic judgement.
+Let $$v\in V_G$$ be any node. Let $$C(v)\subseteq V_G$$ be the set of nodes $$v$$ wishes to avoid forking with ("C" for "cares about"...?). We assume that $$v$$ has knowledge of the UNL of every node in $$C(v)$$. Note that we no longer speak of ostracized nodes; if $$v$$ thinks the node $$u$$ is malicious, then $$v$$ instead can simply remove $$u$$ from $$C(v)$$. Using $$C(v)$$ instead of $$V_G\setminus F(v)$$ is simply a linguistic choice which hopefully will cause less cognitive dissonance than referring to a "global topology" which is not "globally" agreed upon.
 
-At the beginning of validation, each node $$v\in V_G$$ picks a ledger, denoted $$X(v)$$. Each node runs the following algorithm to determine whether or not it should validate:
+The algorithm effectively treats every node not in $$C(v)$$ as Byzantine, and is safe as long as there are no Byzantine nodes in $$C(v)$$. If there are Byzantine nodes in $$C(v)$$, then the protocol is still safe against immediate forks, but may not be safe against future forks. There is no danger in allowing crash-faulty nodes in $$C(v)$$, aside from that they might make forward progress more difficult. Note that we do not assume that $$UNL_v\subseteq C(v)$$; there is probably no reason not to assume this, but allowing the generalization doesn't make the protocol significantly different, and it might be useful to see where it *does* change things.
 
-1. Check if either there exists some ledger $$L$$ such that for every $$L'\neq L$$, $$\#\{u\in UNL_v:X(u)=L\}\geqslant\#\{u\in UNL_v:X(u)=L'\vee X(u)=\bot\}.$$ If so, store the ledger $$L$$ and the set $$S=\#\{u\in UNL_v:X(u)=X(v)\}$$ as private variables, and proceed to step $$2$$. If we hear from all of our neighbors and there is no ledger satisfying the above condition, or enough time passes and still the above condition is not satisfied, reject validation and terminate the algorithm.
-2. Let $$\bot$$ denote "unknown". For each node $$u\in V_G\setminus F(v)$$, mark $$u$$ as **safe** iff for every ledger $$L'\neq L$$, $$\vert UNL_u\setminus S \vert<\vert UNL_v\cap UNL_u\vert - \#\{w\in UNL_v\cap UNL_u : X(w)=L'\vee X(w)=\bot\}$$. Mark $$u$$ as **potentially safe** iff it is not aligned and for every ledger $$L'\neq L$$, $$\vert UNL_u\setminus S \vert<\vert UNL_v\cap UNL_u\vert - \#\{w\in UNL_v\cap UNL_u : X(w)=L'\}$$.
-3. If every node in $$V_G\setminus F(v)$$ has been marked safe, validate the ledger $$L$$ and terminate the algorithm. If there is any node which we left unmarked, immediately reject validation and terminate the algorithm. If not every node is safe but every node is at least potentially safe, wait for time $$D$$ and try step $$2$$ again; if at that point with the new information we have now every node is marked safe, validate the ledger $$L$$, otherwise reject validation and terminate the algorithm.
+For each $$u\in UNL_v$$, let $$X(u)$$ denote the ledger $$u$$ is validating, or $$\bot$$ if this is unknown. $$v$$ runs the following algorithm to determine whether or not it should validate:
+
+1. Check if either there exists some ledger $$L$$ such that for every $$L'\neq L$$, $$\#\{u\in UNL_v:X(u)=L\}+\chi(L,L')>\#\{u\in UNL_v:X(u)=L'\vee X(u)=\bot\}.$$ If so, store the ledger $$L$$ and the set $$S=\#\{u\in UNL_v:X(u)=L\}$$ as private variables, and proceed to step $$2$$. If we hear from all of our neighbors and there is no ledger satisfying the above condition, or enough time passes and still the above condition is not satisfied, reject validation and terminate the algorithm.
+2. For each node $$u\in C(v)$$, mark $$u$$ as **safe** iff for every ledger $$L'\neq L$$, $$\vert UNL_u\cap S \cap C(v)\vert+\chi(L,L')>\vert UNL_u\setminus UNL_v\vert + \#\{w\in UNL_v\cap UNL_u : X(w)=L'\vee X(w)=\bot\vee w\notin C(v)\}$$.
+3. If every node in $$C(v)$$ has been marked safe, fully validate the ledger $$L$$. Otherwise reject validation (or do optimistic waiting if so desired).
 
 #### Analysis
 
@@ -67,12 +78,12 @@ We say a graph $$G$$ **satisfies conformity** if for every pair of nodes $$u,v\i
 
 Satisfying conformity is exactly the necessary-and-sufficient condition on a graph which ensures that even in a worst-case scenario, whenever a node validates a ledger $$L$$ under Ripple validation, every other node is guaranteed to see $$L$$ as the most popular ledger. It is easily shown that in a graph which satisfies conformity, for any node which sees super-majority support for a ledger $$L$$, step $$2$$ will deem every other node safe automatically. Further, as soon as that node has heard from at most $$71\%$$ of its neighbors in this situation, it will pass step $$1$$. Thus that node will fully validate $$L$$ under conformist validation as well (and to do so requires less communication than Ripple validation as well!). Thus in graphs which satisfy conformity, every node will validate under conformist validation at least as often as they would have under Ripple validation. Note however that conformist validation can actually make nodes validate **more** often in graphs with very high connectivity. For instance, in a fully connected graph on five nodes where the nodes vote AABBB, any node which hears from all of the nodes voting $$B$$ before giving up in step $$1$$ will fully validate $$B$$; the nodes which voted $$B$$ themselves will fully validate as soon as they hear from *any* $$3$$ of the other nodes! Thus not only is conformist validation an excellent safety guarantee, it also helps increase the rate of forward progression in "normal" network setups.
 
-On the other end of the spectrum, it is easily deduced that a node $$v$$ will halt (i.e., never fully validate even if it sees unanimous support for a ledger in its UNL) iff there is another node $$u$$ which $$v$$ has not ostracized such that
+On the other end of the spectrum, it is easily deduced that a node $$v$$ will halt (i.e., never fully validate even if it sees unanimous support for a ledger in its UNL) iff there is another node $$u\in C(v)$$ such that
 \begin{aligned}
-\vert UNL_u\cap UNL_v \vert \leqslant 0.5\vert UNL_u\vert.
+\vert UNL_u\cap UNL_v\cap C(v) \vert \leqslant 0.5(\vert UNL_u\vert-1).
 \end{aligned}
 
-Thus just like timid validation, there is about a $$20\%$$ margin on the overlap of UNLs between behaving the same as (or better than, in the case of conformist validation) Ripple validation and always halting.
+(The $$1$$ comes from the whole $$\chi(L,L')$$ business and should basically be ignored). Thus just like timid validation, there is about a $$20\%$$ margin on the overlap of UNLs between behaving the same as (or better than, in the case of conformist validation) Ripple validation and always halting.
 
 It turns out that implementing a naive performance ostracization scheme based on UNL size is unsafe for conformist validation. The reason for this is a bit subtle. Technically speaking, it is not so much problematic for conformist validation as it is a problem for future safety. In fact, it is at least as much a problem for the future safety of timid validation as it is for conformist validation; the only difference is that timid validation never attempts to address future safety in the first place, so one can't really call this a "problem" for timid validation.
 
