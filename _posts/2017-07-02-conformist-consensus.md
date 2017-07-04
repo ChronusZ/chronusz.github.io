@@ -53,14 +53,14 @@ With this optimization in mind, the proposed protocol for entering wrong ledger 
 
 Conformist validation is actually very similar to timid validation; the main change is just to replace "$$80\%$$ support" with "most popular" everywhere. One could easily add an "optimistic waiting" optimization layer on top of conformist validation (it would work just like adding optimistic waiting to timid validation), but we avoid doing so here to maximize clarity. Unfortunately, performance ostracization leads to issues with future-safety, as we highlight in the analysis.
 
-Let $$v\in V_G$$ be any node. Let $$C(v)\subseteq V_G$$ be the set of nodes $$v$$ wishes to avoid forking with ("C" for "cares about"...?). We assume that $$v$$ has knowledge of the UNL of every node in $$C(v)$$. Note that we no longer speak of ostracized nodes; if $$v$$ thinks the node $$u$$ is malicious, then $$v$$ instead can simply remove $$u$$ from $$C(v)$$. Using $$C(v)$$ instead of $$V_G\setminus F(v)$$ is simply a linguistic choice which hopefully will cause less cognitive dissonance than referring to a "global topology" which is not "globally" agreed upon.
+Let $$v\in V_G$$ be any node. Let $$C(v)\subseteq V_G$$ be the set of nodes $$v$$ wishes to avoid forking with ("C" for "cares about"...?). We assume that $$v$$ has knowledge of the UNL of every node in $$C(v)$$. Note that we no longer speak of ostracized nodes in this setting. Using $$C(v)$$ instead of $$V_G\setminus F(v)$$ is simply a linguistic choice which hopefully will cause less cognitive dissonance than referring to a "global topology" which is not "globally" agreed upon.
 
-The algorithm effectively treats every node not in $$C(v)$$ as Byzantine, and is safe as long as there are no Byzantine nodes in $$C(v)$$. If there are Byzantine nodes in $$C(v)$$, then the protocol is still safe against immediate forks, but may not be safe against future forks. There is no danger in allowing crash-faulty nodes in $$C(v)$$, aside from that they might make forward progress more difficult. Note that we do not assume that $$UNL_v\subseteq C(v)$$; there is probably no reason not to assume this, but allowing the generalization doesn't make the protocol significantly different, and it might be useful to see where it *does* change things.
+To clarify, $$C(v)$$ has no impact on Byzantine safety. It *only* says which nodes $$v$$ checks fork-safety with. Byzantine safety is entirely determined by UNLs: a Byzantine node which is not in your UNL can't make you fork with another node, and a Byzantine node which is in your UNL will affect your fork-safety the same regardless of whether you "care about" it or not. To avoid thinking the protocol is safe in situations where it isn't, it is best to always require that $$UNL_v\subseteq C(v)$$ (but there's of course no need to require that $$UNL_v = C(v)$$).
 
 For each $$u\in UNL_v$$, let $$X(u)$$ denote the ledger $$u$$ is validating, or $$\bot$$ if this is unknown. $$v$$ runs the following algorithm to determine whether or not it should validate:
 
 1. Check if either there exists some ledger $$L$$ such that for every $$L'\neq L$$, $$\#\{u\in UNL_v:X(u)=L\}+\chi(L,L')>\#\{u\in UNL_v:X(u)=L'\vee X(u)=\bot\}.$$ If so, store the ledger $$L$$ and the set $$S=\#\{u\in UNL_v:X(u)=L\}$$ as private variables, and proceed to step $$2$$. If we hear from all of our neighbors and there is no ledger satisfying the above condition, or enough time passes and still the above condition is not satisfied, reject validation and terminate the algorithm.
-2. For each node $$u\in C(v)$$, mark $$u$$ as **safe** iff for every ledger $$L'\neq L$$, $$\vert UNL_u\cap S \cap C(v)\vert+\chi(L,L')>\vert UNL_u\setminus UNL_v\vert + \#\{w\in UNL_v\cap UNL_u : X(w)=L'\vee X(w)=\bot\vee w\notin C(v)\}$$.
+2. For each node $$u\in C(v)$$, mark $$u$$ as **safe** iff for every ledger $$L'\neq L$$, $$\vert UNL_u\cap S\vert+\chi(L,L')>\vert UNL_u\setminus UNL_v\vert + \#\{w\in UNL_v\cap UNL_u : X(w)=L'\vee X(w)=\bot\vee w\}$$.
 3. If every node in $$C(v)$$ has been marked safe, fully validate the ledger $$L$$. Otherwise reject validation (or do optimistic waiting if so desired).
 
 #### Analysis
@@ -78,7 +78,7 @@ Satisfying conformity is exactly the necessary-and-sufficient condition on a gra
 
 On the other end of the spectrum, it is easily deduced that a node $$v$$ will halt (i.e., never fully validate even if it sees unanimous support for a ledger in its UNL) iff there is another node $$u\in C(v)$$ such that
 \begin{aligned}
-\vert UNL_u\cap UNL_v\cap C(v) \vert \leqslant 0.5(\vert UNL_u\vert-1).
+\vert UNL_u\cap UNL_v \vert \leqslant 0.5(\vert UNL_u\vert-1).
 \end{aligned}
 
 (The $$1$$ comes from the whole $$\chi(L,L')$$ business and should basically be ignored). Thus just like timid validation, there is about a $$20\%$$ margin on the overlap of UNLs between behaving the same as (or better than, in the case of conformist validation) Ripple validation and always halting.
