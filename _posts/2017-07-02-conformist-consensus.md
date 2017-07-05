@@ -63,7 +63,7 @@ To keep things as abstract as possible, let $$f:\mathbb{N}\to\mathbb{N}_0$$ be a
 
 For each $$u\in UNL_v$$, let $$X(u)$$ denote the ledger $$u$$ is validating, or $$\bot$$ if this is unknown. $$v$$ runs the following algorithm to determine whether or not it should validate:
 
-1. Check if either there exists some ledger $$L$$ such that for every $$L'\neq L$$, $$\vert S\vert+\chi(L,L')>\#\{u\in UNL_v:X(u)=L'\vee X(u)=\bot\}+2f(\vert UNL_v\vert).$$ If so, store the ledger $$L$$ and the set $$S=\#\{u\in UNL_v:X(u)=L\}$$ as private variables, and proceed to step $$2$$. If we hear from all of our neighbors and there is no ledger satisfying the above condition, or enough time passes and still the above condition is not satisfied, reject validation and terminate the algorithm.
+1. Check if either there exists some ledger $$L$$ such that for every $$L'\neq L$$, $$\#\{u\in UNL_v:X(u)=L\}+\chi(L,L')>\#\{u\in UNL_v:X(u)=L'\vee X(u)=\bot\}+2f(\vert UNL_v\vert).$$ If so, store the ledger $$L$$ and the set $$S=\#\{u\in UNL_v:X(u)=L\}$$ as private variables, and proceed to step $$2$$. If we hear from all of our neighbors and there is no ledger satisfying the above condition, or enough time passes and still the above condition is not satisfied, reject validation and terminate the algorithm.
 2. For each node $$u\in C(v)$$, mark $$u$$ as **safe** iff for every ledger $$L'\neq L$$, $$\vert UNL_u\cap S\vert+\chi(L,L')>\vert UNL_u\setminus UNL_v\vert + \#\{w\in UNL_v\cap UNL_u : X(w)=L'\vee X(w)=\bot\}+2f(\vert UNL_u\vert)$$.
 3. If every node in $$C(v)$$ has been marked safe, fully validate the ledger $$L$$. Otherwise reject validation (or do optimistic waiting if so desired).
 
