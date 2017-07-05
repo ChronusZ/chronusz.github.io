@@ -57,13 +57,19 @@ Let $$v\in V_G$$ be any node. Let $$C(v)\subseteq V_G$$ be the set of nodes $$v$
 
 To clarify, $$C(v)$$ has no impact on Byzantine safety. It *only* says which nodes $$v$$ checks fork-safety with. Byzantine safety is entirely determined by UNLs: a Byzantine node which is not in your UNL can't make you fork with another node, and a Byzantine node which is in your UNL will affect your fork-safety the same regardless of whether you "care about" it or not. To avoid thinking the protocol is safe in situations where it isn't, it is best to always require that $$UNL_v\subseteq C(v)$$ (but there's of course no need to require that $$UNL_v = C(v)$$).
 
+For robustness, we also add a parameter allowing some fraction of anyone's UNL to be Byzantine and still get proveable safety. Thus nodes which are not known to be Byzantine still won't affect the protocol. This allowance comes at the cost of forward progress: the more nodes one wants to allow to be Byzantine, the harder it is to fully validate a ledger.
+
+To keep things as abstract as possible, let $$f:\mathbb{N}\to\mathbb{N}_0$$ be an arbitrary monotone-increasing function. The values of $$f$$ are interpreted as "in a UNL of size $$n\in\mathbb{N}$$, we allow at most $$f(n)$$ arbitrarily chosen nodes in the UNL to be Byzantine". In general $$f$$ will probably only ever be (the floor of) a linear function with a slope between $$0$$ and $$0.5$$, but it may be helpful for pedagogy to be able to recognize immediately where $$f$$ shows up.
+
 For each $$u\in UNL_v$$, let $$X(u)$$ denote the ledger $$u$$ is validating, or $$\bot$$ if this is unknown. $$v$$ runs the following algorithm to determine whether or not it should validate:
 
-1. Check if either there exists some ledger $$L$$ such that for every $$L'\neq L$$, $$\#\{u\in UNL_v:X(u)=L\}+\chi(L,L')>\#\{u\in UNL_v:X(u)=L'\vee X(u)=\bot\}.$$ If so, store the ledger $$L$$ and the set $$S=\#\{u\in UNL_v:X(u)=L\}$$ as private variables, and proceed to step $$2$$. If we hear from all of our neighbors and there is no ledger satisfying the above condition, or enough time passes and still the above condition is not satisfied, reject validation and terminate the algorithm.
-2. For each node $$u\in C(v)$$, mark $$u$$ as **safe** iff for every ledger $$L'\neq L$$, $$\vert UNL_u\cap S\vert+\chi(L,L')>\vert UNL_u\setminus UNL_v\vert + \#\{w\in UNL_v\cap UNL_u : X(w)=L'\vee X(w)=\bot\vee w\}$$.
+1. Check if either there exists some ledger $$L$$ such that for every $$L'\neq L$$, $$\vert S\vert+\chi(L,L')>\#\{u\in UNL_v:X(u)=L'\vee X(u)=\bot\}+2f(\vert UNL_v\vert).$$ If so, store the ledger $$L$$ and the set $$S=\#\{u\in UNL_v:X(u)=L\}$$ as private variables, and proceed to step $$2$$. If we hear from all of our neighbors and there is no ledger satisfying the above condition, or enough time passes and still the above condition is not satisfied, reject validation and terminate the algorithm.
+2. For each node $$u\in C(v)$$, mark $$u$$ as **safe** iff for every ledger $$L'\neq L$$, $$\vert UNL_u\cap S\vert+\chi(L,L')>\vert UNL_u\setminus UNL_v\vert + \#\{w\in UNL_v\cap UNL_u : X(w)=L'\vee X(w)=\bot\}+2f(\vert UNL_u\vert)$$.
 3. If every node in $$C(v)$$ has been marked safe, fully validate the ledger $$L$$. Otherwise reject validation (or do optimistic waiting if so desired).
 
 #### Analysis
+
+For expository reasons, assume temporarily that $$f(n)=0$$ for all $$n\in\mathbb{N}$$. Further below we will discuss the general case.
 
 Some explanation may be necessary to explain why conformist validation can change "$$80\%$$ support" to "most popular" in step $$1$$ and not run into issues with safety.
 
@@ -90,6 +96,21 @@ Performance ostracization works well for timid validation because timid validati
 Again though, the issue is subtle; suppose $$v$$ is a node in a reasonably well-connected network, and suppose there is a node $$u$$ which doesn't broadcast to any other nodes $$v$$ cares about. Then if $$v$$ doesn't care about forking with $$u$$, $$u$$ cannot cause any issues for forking with nodes $$v$$ does care about. Further, as long as a majority of the nodes in the UNL of $$u$$ are nodes which $$v$$ cares about, then $$v$$ can ignore $$u$$ and have no risk of forking even with $$u$$ itself.
 
 I have not thought extensively about exactly under what other conditions it might be safe to performance ostracize a node while still safeguarding against future forks, but I imagine they must be pretty strict to retain proveable safety. Thankfully, in a network of validators which is generally suspicious of newcomers, the above condition is probably sufficient to prevent halting due to newcomers with low connectivity; simply don't add new nodes to your UNL unless they have sufficient connectivity to prevent halting. If a node $$w$$ in your network adds them too early when they still have low connectivity, $$w$$ is probably malicious so you can ostracize it.
+
+###### Allowing Byzantine Nodes in the UNL
+
+We now discuss the general case of arbitrary $$f$$.
+
+We say a graph $$G$$ **satisfies conformity with f** if for every pair of nodes $$u,v\in V_G$$,
+\begin{aligned}
+\vert UNL_u\cap UNL_v \vert > \max\\{\lfloor 0.2\vert UNL_v\vert\rfloor + \lfloor 0.5\vert UNL_u\vert\rfloor+f(\vert UNL_u\vert),\lfloor 0.5\vert UNL_v\vert\rfloor + \lfloor 0.2\vert UNL_u\vert\rfloor+f(\vert UNL_v\vert)\\}.
+\end{aligned}
+
+This is the condition on which conformist validation will always fully validate at least as easily as Ripple validation does. Note however that just as above, for reasonable $$f$$ functions, on graphs which satisfy conformity with $$f$$ conformist validation will usually have strictly better forward progress than Ripple validation.
+
+To give an idea of the forward progress of conformist validation with faults, take $$f(n)=\lfloor (n-1)/5\rfloor$$. This is the same fault tolerance proposed for Ripple validation in the whitepaper. In this case for a graph to satisfy conformity with $$f$$, there needs to be a roughly $$90\%$$ overlap on UNLs. In complete graphs, step $$2$$ is completely irrelevant; thus in this case a node will fully validate as soon as it sees $$71\%$$ support for any ledger, even if the other $$29\%$$ have crashed. This quorum becomes even better in the event that the competing ledgers are all contentious; if a node sees e.g. $$61\%$$ support for ledger $$A$$ and $$5\%$$ support each for ledgers $$B,C,D$$, then that node will also fully validate regardless of the state of the other $$24\%$$. Thus in this case the protocol still has quite good forward progress.
+
+Forward progress becomes worse as $$f$$ gets bigger. In the extreme case, when $$f(n)>\lfloor n/2\rfloor$$ nodes will always halt. When $$f(n)>\lfloor n/3\rfloor$$, nodes will not halt, but forward progress will always be worse than Ripple validation even when the graph is complete.
 
 ## Conclusion
 
