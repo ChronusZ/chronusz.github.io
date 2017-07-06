@@ -10,9 +10,9 @@ use_math: true
 This note formally proves the necessary and sufficient condition on (immediate) fork-safety for Ripple Validation.
 
 **Proposition.** Let $$G=(V,E)$$ be a graph. Then Ripple Validation is safe against (immediate) forks if and only if, for every pair of nodes $$u,v\in V$$,
-$$$\begin{aligned}
+\begin{aligned}
 \vert UNL_u\cap UNL_v\vert > \lfloor 0.2\vert UNL_u\vert \rfloor + \lfloor 0.2\vert UNL_v\vert \rfloor.
-\end{aligned}$$$
+\end{aligned}
 
 *Proof*. First assume for showing necessesity that
 \begin{aligned}
