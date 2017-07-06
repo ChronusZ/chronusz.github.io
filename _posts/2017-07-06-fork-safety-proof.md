@@ -24,9 +24,9 @@ Then there exist integers $$0\leqslant i\leqslant \lfloor 0.2\vert UNL_u\vert \r
 Partition $$UNL_u\cap UNL_v$$ into two arbitrary subsets $$S_A$$ and $$S_B$$, such that $$\vert S_A\vert=j$$ and $$\vert S_B\vert=i$$. Then suppose $$UNL_u\setminus S_B$$ all vote for ledger $$A$$ and $$UNL_v\setminus S_A$$ all vote for ledger $$B$$. Then $$u$$ will see a super-majority support for $$A$$ and fully validate $$A$$ while $$v$$ sees a super-majority support for $$B$$ and fully validate $$B$$, leading to a fork.
 
 Sufficiency follows from a pigeonhole argument. Suppose $$u\in V$$ sees enough support to fully validate the ledger $$A$$, and suppose for every $$v\in V$$
-$$$\begin{aligned}
+\begin{aligned}
 \vert UNL_u\cap UNL_v\vert > \lfloor 0.2\vert UNL_u\vert \rfloor + \lfloor 0.2\vert UNL_v\vert \rfloor.
-\end{aligned}$$$
+\end{aligned}
 
 It suffices to show that $$v$$ cannot see super-majority support for a different ledger than $$A$$. Let $$i$$ be the number of nodes in $$UNL_u$$ that don't vote $$A$$. Since $$u$$ sees super-majority support for $$A$$, $$i\leqslant\lfloor 0.2\vert UNL_u\vert \rfloor$$. Thus if $$S\subseteq V$$ is the set of all nodes which vote for $$A$$, then
 \begin{aligned}
