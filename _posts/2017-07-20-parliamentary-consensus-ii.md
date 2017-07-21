@@ -53,14 +53,14 @@ At the beginning of the protocol, the node $$\mathcal{P}_i$$ creates an instance
 
 Every node $$\mathcal{P}_i$$ (including the candidates themselves) then operates according to the following protocol. Let $$R$$ be the minimum council size we want; $$R$$ doesn't need to be globally agreed upon, but the "actual" value will tend towards the minimum among the "trusted" nodes. Setting $$R$$ too high can block termination if there are fewer than $$R$$ nonfaulty candidates. In practice, $$R$$ can decrease in the middle of a round of consensus, so if one sees consensus stalling they can decrease $$R$$ to aid termination. This won't cause any issues for fork-safety, but lowering $$R$$ too much lowers decentralization.
 
-```
+
 1. Upon readying a hash value from $$\mathsf{RBC}_b$$, check if we know the transaction set that it references. If not, ask our peers if they know to try to find it out. After learning the transaction set which gave rise to the hash, set our state in $$\mathsf{VBA}_b$$ to $$\mathsf{VALIDATING}$$.
 2. Upon accepting a hash value from $$\mathsf{RBC}_b$$, if $$\mathcal{P}_b$$ is in $$B_i$$ and we are already in $$\mathsf{VALIDATING}$$ mode for $$\mathsf{VBA}_b$$ (i.e., we know the transaction set leading to the hash), then vote $$1$$ in $$\mathsf{VBA}_b$$.
 2. Once at least $$R$$ instances of $$\mathsf{VBA}$$ have terminated (possibly not on $$1$$), thereafter automatically vote $$0$$ for every other instance of $$\mathsf{VBA}$$. Additionally, for any instance of $$\mathsf{VBA}$$
 3. Once all instances of $$\mathsf{VBA}$$ relating to all nodes in $$\overline{B}_i$$ have terminated, let $$T$$ be the set of nodes in $$\overline{B}$$ which terminated on $$1$$.
 4. Wait until we have readied some message under reliable broadcast from every node in $$T$$. If we ready a hash that we haven't heard from, ask our peers to try to find it out; by VBA-Rejection, there must have been at least $$f_S+1$$ nonfaulty nodes in one of our threads which was in $$\mathsf{VALIDATING}$$ mode on the relevant $$\mathsf{VBA}$$ instance, which, due to the criterion for entering $$\mathsf{VALIDATING}$$ mode in step $$1$$, means they must have the transaction set. Thus we can get the transaction set from at least one of them. Because we have the hash, a Byzantine node cannot trick us into taking the wrong transaction set.
 5. Apply a deterministic algorithm to the proposals we now know of to construct the final block. This deterministic algorithm could be a union, or an intersection, or picking out the transactions with super-majority support, or whatever; as long as all the honest nodes that don't want to fork with each other agree on the same algorithm anything works.
-```
+
 
 ## Amending the Ballot
 
@@ -72,11 +72,11 @@ At any point in time, a node $$\mathcal{P}_b$$ which is not a candidate (or one 
 
 Let $$r$$ be a natural number such that we think every reasonable candidate should complete reliable broadcast *at least* once every $$r$$ rounds of consensus. There is no requirement on $$r$$ for safety, but setting it too low might overly strain honest candidates and setting it too high might make slow down consensus by allowing lame nodes into the ballot.
 
-```
+
 1. Upon hearing messages related to a binary agreement instance for a node $$\mathcal{P}_b$$ from at least $$f_S+1$$ nodes in some thread $$S\in N_i$$, check if we have accepted a reliable broadcast from $$\mathcal{P}_b$$ in the past $$r$$ rounds of consensus. If so, instantiate binary agreement voting $$1$$ and immediately enter $$\mathsf{VALIDATING}$$ mode. If not, instantiate binary agreement voting $$0$$ and do not enter $$\mathsf{VALIDATING}$$ mode until we accept a reliable broadcast from $$\mathcal{P}_b$$ (if ever).
 2. Wait until binary agreement terminates. If it terminates on $$0$$, remove $$\mathcal{P}_b$$ from $$C_i$$ and broadcast confirmation over the "nonforking network". If it terminates on $$1$$, add $$\mathcal{P}_b$$ to $$\overline{C}_i$$ and broadcast confirmation over the nonforking network.
 3. Upon receiving confirmations from *all* of the nodes we don't want to fork with, *then* (if we terminated on $$1$$) add $$\mathcal{P}_b$$ to $$C_i$$ or (if we terminated on $$0$$) remove $$\mathcal{P}_b$$ from $$\overline{C}_i$$.
-```
+
 
 ## Implementing the Primitives
 
@@ -94,11 +94,11 @@ The fact that we restrict proposals to binary values is important for guaranteei
 
 The protocol run by node $$\mathcal{P}_i$$ is as follows:
 
-```
+
 1. Broadcast $$\mathsf{BPP}(v_i)$$.
 2. If we see weak support for $$\mathsf{BPP}(v)$$, where $$v$$ is any bit we have not yet broadcasted, broadcast $$\mathsf{BPP}(v)$$.
 3. If we see strong support for $$\mathsf{BPP}(v)$$, where $$v$$ is any bit, add $$v$$ to $$\mathsf{values}_i$$.
-```
+
 
 Proof of BPP-Validity:
 If a healthy node $$\mathcal{P}_i$$ adds a bit $$v$$ to $$\mathsf{values}_i$$, then it must have seen strong support for $$\mathsf{BPP}(v)$$; in particular, a healthy node in $$N_i$$ must have broadcasted $$\mathsf{BPP}(v)$$. Now suppose a healthy node $$\mathcal{P}_i$$ broadcasts $$\mathsf{BPP}(v)$$. Then $$\mathcal{P}_i$$ saw weak support for $$\mathsf{BPP}(v)$$, which means at least one healthy node in $$\mathcal{P}_i$$'s safety net must have broadcasted $$\mathsf{BPP}(v)$$. But since there are only a finite number of nodes, by infinite descent there must have been some healthy node $$\mathcal{P}_k$$ such that no healthy node in $$N_k$$ broadcasted $$\mathsf{BPP}(v)$$ before $$\mathcal{P}_k$$. Thus $$\mathcal{P}_k$$ must have proposed $$v$$, so $$v$$ was proposed by a healthy node as claimed.
@@ -125,11 +125,11 @@ $$\mathsf{RBC}$$ effectively proceeds in three steps. Each step has a distinct p
 
 At the start of an RBC instance, the sender $$\mathcal{P}_b$$ broadcasts $$\mathsf{READY}(proposal)$$. $$\mathcal{P}_b$$ accepts its own message when it sees strong support for $$\mathsf{READY}(proposal)$$. Every other node $$\mathcal{P}_i$$ operates according to the following protocol.
 
-```
+
 1. Upon receiving $$\mathsf{READY}(v)$$ directly from $$\mathcal{P}_b$$, or upon seeing weak support for $$\mathsf{ECHO}(v)$$, if we have not broadcasted an echo message yet, broadcast $$\mathsf{ECHO}(v)$$.
 2. Upon seeing strong support for $$\mathsf{ECHO}(v)$$, or upon seeing weak support for $$\mathsf{READY}(v)$$, if we have not broadcasted a ready message yet, broadcast $$\mathsf{READY}(v)$$.
 3. Upon seeing strong support for $$\mathsf{READY}(v)$$, accept $$v$$.
-```
+
 
 RBC-Validity follows by the same general argument as BPP-Validity. RBC-Agreement follows from the fact that no healthy thread can strongly support two contradictory statements. RBC-Termination-Agreement follows from the same basic reasoning, and RBC-Strong-Termination-Agreement follows from RBC-Termination-Agreement by definition of strong connectivity, since eventually every healthy node in $$N_j$$ will ready the message causing $$\mathcal{P}_j$$ to see strong support for that message.
 
@@ -145,12 +145,12 @@ Validated binary agreement has the following properties:
 
 $$\mathsf{VBA}$$ proceeds in rounds; theoretically it could go on for an arbitrarily large or potentially even infinite number of rounds (which is of course necessary by FLP), but the expected termination time is at most four rounds, and the probability of having terminated by the end of each round after that rapidly approaches $$1$$. A node begins on round $$1$$ and broadcasts the message $$\mathsf{PROP}(v_i)$$ with its vote $$v_i$$. On the $$r$$-th round, the node $$\mathcal{P}_i$$ operates according to the following protocol. $$est_i$$ is the value $$\mathcal{P}_i$$ proposes at the start of the round, and $$\mathsf{values}_i$$ starts out empty. We assume nodes can run the algorithm without having proposed a value at the beginning.
 
-```
+
 1. Begin an instance of binary proposal voting $$est_i$$.
 2. If we add a bit $$v$$ to $$\mathsf{values}_i$$ and have not yet broadcasted an aux message: If $$v=0$$, then broadcast $$\mathsf{AUX}(v,r)$$. If $$v=1$$, then broadcast $$\mathsf{AUX}(v,r)$$ only if we're in $$\mathsf{VALIDATING}$$ mode.
 3. For every thread $$S\in N_i$$, wait until there exists some subset $$T\subseteq S$$, such that $$\vert T\vert=2f_S+1$$, every node in $$T$$ has sent out an aux message from round $$r$$, and $$\mathsf{values}_i$$ contains the aux value of every node in $$S$$.
 4. Let $$s=r\% 2$$ (see also the section on "Regarding the Common Coin"). If $$\vert \mathsf{values}_i\vert=2$$, set $$est_i=s$$ and go back to start round $$r+1$$. If $$\vert \mathsf{values}_i\vert=1$$ and $$s$$ is the value in $$\mathsf{values}_i$$, accept $$s$$ and terminate the protocol. If $$\vert\mathsf{values}_i\vert=1$$ but $$s$$ is not the value in $$\mathsf{values}_i$$, set $$est_i$$ to the value in $$\mathsf{values}_i$$ and go back to start round $$r+1$$.
-```
+
 
 I'll prove the VBA properties in another note; they require more effort to prove than the BPP and RBC properties, and trying to cram the proofs into this already-huge note would just be overkill. Also I'm not sure VBA is in its final form; my intuition tells me I can make it work better in incomplete graphs with a bit more work.
 
