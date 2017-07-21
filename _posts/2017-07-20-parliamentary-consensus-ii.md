@@ -57,7 +57,7 @@ Every node $$\mathcal{P}_i$$ (including the candidates themselves) then operates
 1. Upon readying a hash value from $$\mathsf{RBC}_b$$, check if we know the transaction set that it references. If not, ask our peers if they know to try to find it out. After learning the transaction set which gave rise to the hash, set our state in $$\mathsf{VBA}_b$$ to $$\mathsf{VALIDATING}$$.
 2. Upon accepting a hash value from $$\mathsf{RBC}_b$$, if $$\mathcal{P}_b$$ is in $$B_i$$ and we are already in $$\mathsf{VALIDATING}$$ mode for $$\mathsf{VBA}_b$$ (i.e., we know the transaction set leading to the hash), then vote $$1$$ in $$\mathsf{VBA}_b$$.
 2. Once at least $$R$$ instances of $$\mathsf{VBA}$$ have terminated (possibly not on $$1$$), thereafter automatically vote $$0$$ for every other instance of $$\mathsf{VBA}$$. Additionally, for any instance of $$\mathsf{VBA}$$
-3. Once all instances of $$\mathsf{VBA}$$ relating to all nodes in $$\overline{B}_i$$ have terminated, let $$T$$ be the set of nodes in $$\overline{B}$$ which terminated on $$1$$.
+3. Once all instances of $$\mathsf{VBA}$$ relating to all nodes in $$\overline{B}_i$$ have terminated, let $$T$$ be the set of nodes in $$\overline{B}_i$$ which terminated on $$1$$.
 4. Wait until we have readied some message under reliable broadcast from every node in $$T$$. If we ready a hash that we haven't heard from, ask our peers to try to find it out; by VBA-Rejection, there must have been at least $$f_S+1$$ nonfaulty nodes in one of our threads which was in $$\mathsf{VALIDATING}$$ mode on the relevant $$\mathsf{VBA}$$ instance, which, due to the criterion for entering $$\mathsf{VALIDATING}$$ mode in step $$1$$, means they must have the transaction set. Thus we can get the transaction set from at least one of them. Because we have the hash, a Byzantine node cannot trick us into taking the wrong transaction set.
 5. Apply a deterministic algorithm to the proposals we now know of to construct the final block. This deterministic algorithm could be a union, or an intersection, or picking out the transactions with super-majority support, or whatever; as long as all the honest nodes that don't want to fork with each other agree on the same algorithm anything works.
 
@@ -74,8 +74,8 @@ Let $$r$$ be a natural number such that we think every reasonable candidate shou
 
 
 1. Upon hearing messages related to a binary agreement instance for a node $$\mathcal{P}_b$$ from at least $$f_S+1$$ nodes in some thread $$S\in N_i$$, check if we have accepted a reliable broadcast from $$\mathcal{P}_b$$ in the past $$r$$ rounds of consensus. If so, instantiate binary agreement voting $$1$$ and immediately enter $$\mathsf{VALIDATING}$$ mode. If not, instantiate binary agreement voting $$0$$ and do not enter $$\mathsf{VALIDATING}$$ mode until we accept a reliable broadcast from $$\mathcal{P}_b$$ (if ever).
-2. Wait until binary agreement terminates. If it terminates on $$0$$, remove $$\mathcal{P}_b$$ from $$C_i$$ and broadcast confirmation over the "nonforking network". If it terminates on $$1$$, add $$\mathcal{P}_b$$ to $$\overline{C}_i$$ and broadcast confirmation over the nonforking network.
-3. Upon receiving confirmations from *all* of the nodes we don't want to fork with, *then* (if we terminated on $$1$$) add $$\mathcal{P}_b$$ to $$C_i$$ or (if we terminated on $$0$$) remove $$\mathcal{P}_b$$ from $$\overline{C}_i$$.
+2. Wait until binary agreement terminates. If it terminates on $$0$$, remove $$\mathcal{P}_b$$ from $$C_i$$ and broadcast confirmation over the "nonforking network". If it terminates on $$1$$, add $$\mathcal{P}_b$$ to $$\overline{B}_i$$ and broadcast confirmation over the nonforking network.
+3. Upon receiving confirmations from *all* of the nodes we don't want to fork with, *then* (if we terminated on $$1$$) add $$\mathcal{P}_b$$ to $$B_i$$ or (if we terminated on $$0$$) remove $$\mathcal{P}_b$$ from $$\overline{B}_i$$.
 
 
 ## Implementing the Primitives
