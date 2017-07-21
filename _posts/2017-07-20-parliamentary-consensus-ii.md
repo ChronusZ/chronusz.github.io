@@ -66,7 +66,9 @@ Every node $$\mathcal{P}_i$$ (including the candidates themselves) then operates
 
 ## Amending the Ballot
 
-We now describe the ballot amendment protocol, which allows nodes to join or be removed from the ballot. In the name of decentralization, it helps if the ballot is as large as possible. However, including too many faulty nodes on the ballot can make termination take longer at no benefit to decentralization, since termination time grows logarithmically with the number of candidates and faulty nodes will never be chosen for the council. Thus, allowing a dynamic council is necessary for optimal long-term operations. However, differences in ballots can be extremely dangerous for fork safety; because concerns *what* information nodes are directly aware of, the usual safety conditions relying on "eventually all honest nodes will agree" is insufficient, since then there still could be points in time in which nodes are critically in disagreement about the state of the system. Thus amending the ballot needs to be a very careful procedure. If there is any chance of failure, it should always be prefered to keep the ballot the same instead of changing it.
+We now describe the ballot amendment protocol, which allows nodes to join or be removed from the ballot. In the name of decentralization, it helps if the ballot is as large as possible. However, including too many faulty nodes on the ballot can make termination take longer at no benefit to decentralization, since termination time grows logarithmically with the number of candidates and faulty nodes will never be chosen for the council. Thus, allowing a dynamic council is necessary for optimal long-term operations.
+
+Since it is very dangerous for fork-safety if a node 
 
 The most important factor to being a candidate is being able to successfully do reliable broadcast. Thus this protocol effectively just checks if the applicant is able to do and at least somewhat regularly doing reliable broadcast, and then checks to make sure that every other node they care about not forking with has also already seen that the applicant can do reliable broadcast.
 
@@ -74,11 +76,20 @@ At any point in time, a node $$\mathcal{P}_b$$ which is not a candidate (or one 
 
 Let $$r$$ be a natural number such that we think every reasonable candidate should complete reliable broadcast *at least* once every $$r$$ rounds of consensus. There is no requirement on $$r$$ for safety, but setting it too low might overly strain honest candidates and setting it too high might make slow down consensus by allowing lame nodes into the ballot.
 
+Starting at the beginning of every round of consensus, the following protocol is run in parallel; correct nodes are required to wait until this algorithm terminates before moving on to the next round of the main multi-valued consensus protocol. This is required to ensure safety. Changes to $$\overline{B}_i$$ and $$B_i$$ go into effect the following round. All messages should be signed with the id of the current round of consensus to avoid messages overlapping due to asynchrony.
 
-1. Upon hearing messages related to a binary agreement instance for a node $$\mathcal{P}_b$$ from at least $$f_S+1$$ nodes in some thread $$S\in N_i$$, check if we have accepted a reliable broadcast from $$\mathcal{P}_b$$ in the past $$r$$ rounds of consensus. If so, instantiate binary agreement voting $$1$$ and immediately enter $$\mathsf{VALIDATING}$$ mode. If not, instantiate binary agreement voting $$0$$ and do not enter $$\mathsf{VALIDATING}$$ mode until we accept a reliable broadcast from $$\mathcal{P}_b$$ (if ever).
-2. Wait until binary agreement terminates. If it terminates on $$0$$, remove $$\mathcal{P}_b$$ from $$C_i$$ and broadcast confirmation over the "nonforking network". If it terminates on $$1$$, add $$\mathcal{P}_b$$ to $$\overline{B}_i$$ and broadcast confirmation over the nonforking network.
-3. Upon receiving confirmations from *all* of the nodes we don't want to fork with, *then* (if we terminated on $$1$$) add $$\mathcal{P}_b$$ to $$B_i$$ or (if we terminated on $$0$$) remove $$\mathcal{P}_b$$ from $$\overline{B}_i$$.
+1. Let initially $$\overline{B}_i$$ be the set of all nodes we have accepted reliable broadcast from within the past $$r$$ rounds. Broadcast $$\mathsf{BALLOT}(\overline{B}_i)$$.
+2. Upon accepting a reliable broadcast from a node, add that node to $$\overline{B}_i$$.
+3. For every thread $$S\in N_i$$, wait until there exists some subset $$T\subseteq S$$, such that $$\vert T\vert=2f_S+1$$, every node in $$T$$ has sent out a ballot message from round $$r$$, and $$\overline{B}_i$$ contains the ballot suggestion of every node in $$T$$.
+4. Let $$B_i$$ be the set of all nodes strongly supported in the ballot messages we received.
 
+The above ammendment protocol satisfies two properties:
+- Safety: If a healthy node adds $$\mathcal{P}_b$$ to its ballot, then every other directly connected healthy node will add $$\mathcal{P}_b$$ to its tablist before terminating the protocol.
+- Termination: If a node is fully unsplit, then eventually it will terminate.
+
+Proof of safety: Suppose a healthy node $$\mathcal{P}_i$$ adds a node $$\mathcal{P}_b$$ to $$B_i$$. Then for every node $$\mathcal{P}_j$$ directly connected with $$\mathcal{P}_i$$, there must be some thread $$S\in N_j$$ such that at least $$f_S+1$$ honest nodes in $$S$$ broadcasted support for $$\mathcal{P}_i$$ in their ballot messages. Thus $$\mathcal{P}_j$$ won't move past step $$3$$ until adding $$\mathcal{P}_b$$ to $$\overline{B}_j$$.
+
+Proof of termination: Suppose $$\mathcal{P}_i$$ is healthy and fully unsplit. Then if $$\mathcal{P}_j\in N_i^{\infty}$$ is a healthy node which broadcasts support for a node $$\mathcal{P}_b$$, then $$\mathcal{P}_j$$ must have accepted a reliable broadcast from $$\mathcal{P}_b$$, so by RBC-Strong-Termination-Agreement, eventually $$\mathcal{P}_i$$ will also accept a reliable broadcast from $$\mathcal{P}_b$$ and add $$\mathcal{P}_b$$ to $$\overline{B}_i$$. Thus eventually $$\overline{B}_i$$ will contain the ballot suggestion of every node in its extended safety net; hence in particular it will contain the ballot suggestion of every node in its safety net. Since $$\mathcal{P}_i$$ is healthy by assumption, at least $$2f_S+1$$ nodes in every thread $$S\in N_i$$ is healthy, so eventually $$\mathcal{P}_i$$ will satisfy the predicate in step $$3$$ and terminate.
 
 ## Implementing the Primitives
 
@@ -150,7 +161,7 @@ Validated binary agreement has the following properties:
 - VBA-Validity: If a healthy node $$\mathcal{P}_i$$ accepts some value, a healthy node must have proposed that value.
 - VBA-Agreement: No two healthy, directly connected nodes accept different values.
 - VBA-Rejection: If any honest node $$\mathcal{P}_i$$ accepts $$1$$, then for every node $$\mathcal{P}_j$$ directly connected to $$\mathcal{P}_i$$, there is some thread $$S\in N_j$$ such that at least $$f_S+1$$ nodes entered $$\mathsf{VALIDATING}$$ mode.
-- VBA-Termination: Every healthy, nonsplit node eventually terminates with probability $$1$$.
+- VBA-Termination: Every healthy, unsplit node eventually terminates with probability $$1$$.
 
 $$\mathsf{VBA}$$ proceeds in rounds; theoretically it could go on for an arbitrarily large or potentially even infinite number of rounds (which is of course necessary by FLP), but the expected termination time is at most four rounds, and the probability of having terminated by the end of each round after that rapidly approaches $$1$$. A node begins on round $$1$$ and broadcasts the message $$\mathsf{PROP}(v_i)$$ with its vote $$v_i$$. On the $$r$$-th round, the node $$\mathcal{P}_i$$ operates according to the following protocol. $$est_i$$ is the value $$\mathcal{P}_i$$ proposes at the start of the round, and $$\mathsf{values}_i$$ starts out empty. We assume nodes can run the algorithm without having proposed a value at the beginning.
 
