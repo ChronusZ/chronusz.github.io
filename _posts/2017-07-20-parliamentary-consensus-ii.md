@@ -80,7 +80,7 @@ Let $$r$$ be a natural number such that we think every reasonable candidate shou
 
 ## Implementing the Primitives
 
-Here we describe finally how the primitives themselves work. 
+Here we describe finally how the primitives themselves work. There are actually three primitives that are needed: binary proposal ($$\mathsf{BPP}$$), validated binary agreement ($$\mathsf{VBA}$$), and reliable broadcast ($$\mathsf{RBC}$$). $$\mathsf{RBB}$$ is used to construct $$\mathsf{VBA}$$, and $$\mathsf{VBA}$$ and $$\mathsf{RBC}$$ are used in conjunction to construct the overlying multi-valued consensus protocol.
 
 #### Binary Proposal (based on Mostefaouil's protocol)
 
