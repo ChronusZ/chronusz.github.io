@@ -68,8 +68,6 @@ Every node $$\mathcal{P}_i$$ (including the candidates themselves) then operates
 
 We now describe the ballot amendment protocol, which allows nodes to join or be removed from the ballot. In the name of decentralization, it helps if the ballot is as large as possible. However, including too many faulty nodes on the ballot can make termination take longer at no benefit to decentralization, since termination time grows logarithmically with the number of candidates and faulty nodes will never be chosen for the council. Thus, allowing a dynamic council is necessary for optimal long-term operations.
 
-Since it is very dangerous for fork-safety if a node 
-
 The most important factor to being a candidate is being able to successfully do reliable broadcast. Thus this protocol effectively just checks if the applicant is able to do and at least somewhat regularly doing reliable broadcast, and then checks to make sure that every other node they care about not forking with has also already seen that the applicant can do reliable broadcast.
 
 At any point in time, a node $$\mathcal{P}_b$$ which is not a candidate (or one that is a candidate, although there's no reason to in that case) can begin an instance of reliable broadcast, sending a message like $$"app:b"$$. Nodes can choose to ignore this reliable broadcast, but if they can be reasonably confident that the broadcaster is legitimate (e.g., if the sender can verify that it's a certain bank, and that bank is not overly affiliated with any other candidates) then they should try to participate in the reliable broadcast.
