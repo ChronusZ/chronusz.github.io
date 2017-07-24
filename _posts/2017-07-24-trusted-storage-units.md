@@ -9,7 +9,7 @@ use_math: true
 
 This note is just tossing around ideas for optimization of parliamentary consensus.
 
-The main reason we're (i.e., David and Stefan are) still considering doing the establish phase before parliamentary consensus is to make the protocol more efficient by ensuring that in most cases all the nodes will already know the transaction set each hash belongs to, thus enabling us to effectively just run parliamentary consensus using hashes, and in most cases no costly extra transmission of transaction sets would need to occur.
+The main reason we are (i.e., David and Stefan are) still considering doing the establish phase before parliamentary consensus is to make the protocol more efficient by ensuring that in most cases all the nodes will already know the transaction set each hash belongs to, thus enabling us to effectively just run parliamentary consensus using hashes, and in most cases no costly extra transmission of transaction sets would need to occur.
 
 I'm still somewhat fuzzy on how the establish phase takes care of learning about new transaction sets, so I'm not sure how costly the transmission is there; just intuitively I would imagine that there must be at least a few different transaction sets in circulation at the start usually, so probably every node needs to learn at least a couple of whole new transaction sets. Thus the total number of "large" messages (i.e., messages on the size scale of whole transaction sets) transmitted is probably at least around $$2N$$ with $$N$$ nodes. These are just incredibly loose, intuitive guesses though, so please correct me if somehow the number of large messages transmitted is cleverly kept smaller.
 
