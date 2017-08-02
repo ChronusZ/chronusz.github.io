@@ -27,9 +27,9 @@ Bob sends to Alice $$s:=\sqrt{x} \mod \lambda(N)$$ and $$h:=g^{\lambda(N)}\cdot 
 
 Alice then computes for every $$i\leqslant \vert S\vert$$ the number $$e_i:=h^{s^{2i}} \mod N'$$. Let $$c_i$$ denote the $$i-th$$ coefficient in the characteristic polynomial $$\chi_S$$ of $$S$$ (i.e., the polynomial of degree $$\vert S\vert$$ whose roots are the elements of $$S$$). Then Alice computes
 
-$$$\begin{aligned}
+\begin{aligned}
 e:=\prod_{i=0}^{\vert S\vert}e_i^{c_i}\mod N'\hspace{1em}(=h^{\chi_S(s^2)}=v^{\chi_S(x)+f(\lambda(N))}\mod N'),
-\end{aligned}$$$
+\end{aligned}
 
 where $$f$$ is some large polynomial with integer coefficients. Alice sends $$e$$ back to Bob.
 
