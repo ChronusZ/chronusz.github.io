@@ -19,7 +19,7 @@ Let $$k$$ be an approximate bit-length security parameter. $$k$$ should be chose
 
 Bob chooses two primes $$p,q$$ such that $$N:=p\cdot q\approx 2^k$$. Bob also chooses an additional prime $$r$$ randomly between $$2^k$$ and $$2^{2k}$$. These boundaries are not critical; the idea is that $$r$$ should be hard to discover at random but should be at least around the size of $$N$$ in order to get similar safety to RSA. Note however that the bit-size of the messages exchanged between Alice and Bob is around $$\log_2(N\cdot r)$$, so choosing $$r$$ too big can make the messages fairly big as well.
 
-Bob computes the totient $$\lambda(N)=\lcm(p-1,q-1)$$. Then Bob picks random numbers $$v<n$$ and $$s<n$$, and sends $$N':=N\cdot r$$ and $$w:=v^s \mod N'$$ to Alice.
+Bob computes the totient $$\lambda(N)=\mathrm{lcm}(p-1,q-1)$$. Then Bob picks random numbers $$v<n$$ and $$s<n$$, and sends $$N':=N\cdot r$$ and $$w:=v^s \mod N'$$ to Alice.
 
 Alice picks a random number $$t<N'$$ and sends $$g:=w^t \mod N'$$ to Bob.
 
@@ -33,6 +33,6 @@ e:=\prod_{i=0}^{\vert S\vert}e_i^{c_i}\mod N'\hspace{1em}(=h^{\chi_S(s^2)}=v^{\c
 
 where $$f$$ is some large polynomial with integer coefficients. Alice sends $$e$$ back to Bob.
 
-Since $$x\in S$$ iff $$\chi_S(x)=0$$, if $$x\in S$$ then $$e$$ is a power of $$v^{\lambda(N)}$$; since $$\lambda(N)$$ is large, there is at most neglible chance that $$\chi_S(x)$$ is a multiple of $$\lambda(N)$$, so with at most neglible chance of failure, $$e$$ is a power of $$v^{\lambda(N)}$$ iff $$x\in S$$. By definition of Carmichael's totient, $$e=1 \mod N$$ iff $$e$$ is a power of $$v^{\lambda(N)$$.
+Since $$x\in S$$ iff $$\chi_S(x)=0$$, if $$x\in S$$ then $$e$$ is a power of $$v^{\lambda(N)}$$; since $$\lambda(N)$$ is large, there is at most neglible chance that $$\chi_S(x)$$ is a multiple of $$\lambda(N)$$, so with at most neglible chance of failure, $$e$$ is a power of $$v^{\lambda(N)}$$ iff $$x\in S$$. By definition of Carmichael's totient, $$e=1 \mod N$$ iff $$e$$ is a power of $$v^{\lambda(N)}$$.
 
 Thus Bob checks if $$e=1 \mod N$$. With at most neglible chance of failure, this tells Bob whether or not $$x\in S$$.
