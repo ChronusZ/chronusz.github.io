@@ -11,6 +11,12 @@ This note gives a protocol for doing *zero-knowledge blind set membership querie
 
 The protocol is basically a butchering of the ideas behind RSA. I'm about $$50\%$$ confident it works, but I'm not experienced enough with cryptography to be able to prove that it works. The general idea is that $$B$$ gives $$A$$ an encrypted "puzzle" that can be solved "under the encryption" with knowledge of the set $$S$$, but for which only $$B$$ knows how to decrypt the answer.
 
+## ~ ~ NOTE FROM 10 MONTHS LATER ~ ~
+
+Since first coming up with this idea I've learned a lot more about cryptography. Nowadays I would just say have $$B$$ send a homomorphic encryption of $$x$$ to $$A$$, and have $$A$$ compute the characteristic polynomial of $$A$$ on $$x$$ then multiply the result by a random nonzero number and return the encrypted evaluation to $$B$$. This scheme is simple and very easy to prove correct (for zero knowledge, if $$x\in S$$ then the simular just encrypts a random field element, and otherwise it encrypts $$0$$; blindness just comes directly from the indistinguishability of the homomorphic encryption scheme), although it seems difficult to do without opening a sidechannel attack vector that reveals the size of $$A$$. I can't think of a scheme to do this that doesn't require computation to grow linearly with the size of $$A$$, although I can't say whether or not it's impossible (it doesn't seem entirely unlikely that a log time algorithm could be developed, but I'm starting to talk out of my ass here).
+
+I haven't checked if the idea below is valid or not; I highly doubt it is. I leave it here just as a record of my tendency to overestimate my own understanding of a subject before I actually understand anything about it. Hopefully some day I'll learn better how to better recognize my shortcomings.
+
 ## Protocol
 
 For the rest of this note, Alice will be the party holding the private set $$S$$ and Bob will be the party asking whether or not the private element $$x$$ is contained in $$S$$.
